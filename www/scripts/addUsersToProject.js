@@ -2,22 +2,8 @@ $(document).ready(function() {
     
     var searchList = smartList.createList({element : '#search-results'});
     var resultList = smartList.createList({element : '#selected-users'});
-    var ua = navigator.userAgent,
-    clickevent = (ua.match(/iPad/i) || ua.match(/iPhone/i) || ua.match(/Android/i)) ? "touchstart" : "click";
+    
     // success handler must be declared before app is constructed
-    
-    function getJsonFromUrl() {
-        var query = location.search.substr(1);
-        var data = query.split("&");
-        var result = {};
-        for(var i=0; i<data.length; i++) {
-            var item = data[i].split("=");
-            result[item[0]] = item[1];
-        }
-        return result;
-    }
-    
-    var result = getJsonFromUrl();
     
     var successHandler = function(data) {
         $('#search-results > ul').html('');
@@ -73,7 +59,7 @@ $(document).ready(function() {
         successHandler : successHandler
     });
     
-    $(document).hammer().on('tap', '.list-item' ,function(e) {
+    $(document).on('click', '.list-item' ,function(e) {
                 
         var parent = $(this).closest('section');
         var item = $(this);
@@ -101,7 +87,7 @@ $(document).ready(function() {
     
     var prevQuery = '';
     
-    $(document).hammer().on('tap', '#search-button', function(e){
+    $('#search-button').click(function(e){
         e.preventDefault();
         var searchBox = $($(this).attr('href'));
         
@@ -124,7 +110,7 @@ $(document).ready(function() {
             var args = {};
             args.q = query;
             args.ids = [];
-            args.project_id = result.id;
+            args.project_id = parseInt($('input#project_id').val());
             
             $('section#selected-users li').each(function(index) {
                 args.ids.push($(this).attr('userid'));
@@ -150,6 +136,8 @@ $(document).ready(function() {
                 persistent:false
             });
             
+            setTimeout(function(){ window.location.href = data.message.info.redirect; }, 5000);
+            
         } else {
             native5.Notifications.show( data.message.info.response, {
                 notificationType:'toast',
@@ -169,11 +157,11 @@ $(document).ready(function() {
         successHandler : addSuccessHandler
     });
     
-    $(document).on(clickevent, 'a#add_users', function(e) {
+    $(document).on('click', 'a#add_users', function(e) {
         e.preventDefault();
         var args = {};
         args.add_users = true;
-        args.project_id = result.id;
+        args.project_id = parseInt($('#project_id').val());
         args.ids = [];
         
         $('section#selected-users li').each(function(index) {

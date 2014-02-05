@@ -1,0 +1,286 @@
+<!doctype html>
+<!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+<!--[if IE 9]>    <html class="no-js ie9" lang="en"> <![endif]-->
+<!-- Consider adding an manifest.appcache: h5bp.com/d/Offline -->
+<!--[if gt IE 9]><!--> <html class="no-js" lang="en" itemscope itemtype="http://schema.org/Product"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+	<title>TimeSheet</title>
+	<meta name="description" content="" />
+	<meta name="keywords" content="" />
+	<meta name="author" content="">
+
+	<!--<link rel="shortcut icon" href="" type="image/x-icon" />-->
+
+	<!-- Facebook Metadata /-->
+	<meta property="fb:page_id" content="" />
+	<meta property="og:image" content="" />
+	<meta property="og:description" content=""/>
+	<meta property="og:title" content=""/>
+
+	<!-- Google+ Metadata /-->
+	<meta itemprop="name" content="">
+	<meta itemprop="description" content="">
+	<meta itemprop="image" content="">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+	<link rel="stylesheet" href="styles/css/gumby.css">
+    <link rel="stylesheet" href="styles/font-awesome-4.0.3/css/font-awesome.min.css">
+    
+</head>
+
+<body>
+    <script src="scripts/js/libs/jquery-1.10.1.min.js"></script>
+	<script src="scripts/modernizr.custom.js"></script>
+    
+    <!-- Loading custom js files -->    
+    <script src="scripts/jquery.hammer.min.js" ></script>
+    <script src="scripts/native5.core.js"></script>
+    <script src="scripts/native5.notifications.js"></script>
+    <script src="scripts/smart-list.js"></script>
+    <script src="scripts/sidebar.js" ></script>
+    
+<div id="header" style="height: 68px;">
+        <div class="wrapper">
+            <div class="header-item">
+                
+                <div class="item">
+                    <i class="fa fa-angle-left" id="back"></i>
+                </div>
+                <div class="item logo">
+                    &nbsp;<img src="images/timesheet-logo.png" width="35" alt="">
+                </div>
+                <div class="item title">
+                    <h5>&nbsp;<span id="headertitle">Details</span></h5>
+                    <p class="very-small">&nbsp;&nbsp;<span class="headeremail"></span></p>
+                </div>
+            </div>
+            
+           
+        </div>
+    </div>
+    <div id="page-wrap">
+
+    <div class="row">
+        <div class="eight columns centered">
+            <section class="project-details">
+                <div class="title">
+                    <h5><span id="projectname"></span></h5>
+                </div>
+                <div class="wrapper">
+                <div class="messages">
+                </div>
+                    <div class="overview" style="margin-bottom: 10px;">
+                        
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td>Total Time</td>
+                                    <td><span id="totaltime"></span> hours</td>
+                                </tr>
+                                    <tr>
+                                        <td>Total Salary</td>
+                                        <td><span id="totalsalary"></span>$</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Pause Time</td>
+                                        <td><span id="pausetime"></span> hours</td>
+                                    </tr>
+                                <tr>
+                                    <td>Expenses</td>
+                                    <td><spn id="expenses"></spn>$</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="details" style="margin-bottom: 10px;">
+                        <h6>Details</h6>
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td>Employer</td>
+                                    <td>
+                                    <a id="employer" href="">
+                                    <span id="employername"></span></a></td>
+                                </tr>
+                                <tr>
+                                    <td>Created</td>
+                                    <td><span id="createddate"></span></td>
+                                </tr>
+                                <tr>
+                                    <td>Deadline</td>
+                                    <td><span id="deadline"></span></td>
+                                </tr>
+                                <tr>
+                                    <td>Salary/hr</td>
+                                    <td><span id="salary"></span>$</td>
+                                </tr>
+                                <tr>
+                                    <td>Status</td>
+                                    <td><span id="state"></span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="description">
+                            <h6>Description</h6>
+                            <p style="font-size: 14px; padding: 0 6px;"><span id="description"></span></p>
+                        </div>
+                    </div>
+                </div>
+                
+            </section>
+        </div>
+    </div>
+    
+    <div id="edit-inline-menu" class="inline-menu hidden">
+        <ul>
+            
+        </ul>
+    </div>
+    
+    <script>
+        $(document).ready(function (e) {
+            
+            // LOAD USER DETAILS
+            
+            var user = JSON.parse(localStorage.getItem('user'));
+            
+            // LOAD SIDEBAR
+            
+            $('.headeremail').text(user.email);
+            $('#headername').text(user.first_name + ' ' + user.last_name);
+            $('#headerimage').attr({'src' : user.image});
+            
+            // LOAD COMPLETE
+            
+            function getJsonFromUrl() {
+                var query = location.search.substr(1);
+                var data = query.split("&");
+                var result = {};
+                for(var i=0; i<data.length; i++) {
+                    var item = data[i].split("=");
+                    result[item[0]] = item[1];
+                }
+                return result;
+            }
+            
+            var params = getJsonFromUrl();
+            var projectId = params['id'];
+            
+            var headerHandler = function(data) {
+                $('#header > .wrapper').append(data.message.header_options);
+            };
+            
+            var headerLoader = app.construct({
+                path : 'timesheet',
+                method : 'POST',
+                url : 'headerdata',
+                successHandler : headerHandler
+            });
+            
+            headerLoader.serviceObject.invoke({for: 'project/details', project_id: projectId});
+            
+            var successHandler = function(data) {
+                console.log(data);
+                $('#edit-inline-menu > ul').append(data.message.inlinemenu);
+                
+                $('#projectname').text(data.message.project_details.projectName);
+                $('#totaltime').text(data.message.total_time);
+                $('#totalsalary').text(data.message.total_salary);
+                $('#pausetime').text(data.message.pause_time);
+                $('#expenses').text(data.message.expenses);
+                $('#employername').text(data.message.employer_name);
+                $('#createddate').text(data.message.project_details.prettyCreatedDate);
+                $('#deadline').text(data.message.project_details.prettyDeadline);
+                $('#salary').text(data.message.project_details.projectSalary);
+                $('#state').text(data.message.project_details.readableProjectState);
+                $('#description').text(data.message.project_details.projectDescription);
+                $('a#employer').attr({'href' : 'viewprofile.html?id=' + data.message.manager_id});
+                
+            };
+            
+            var communicator = app.construct({
+                path : 'timesheet',
+                method : 'POST',
+                url : 'project/details_data',
+                successHandler : successHandler
+            });
+            
+            communicator.serviceObject.invoke({id: projectId});
+            
+            $(document).hammer().on('tap', '#marker', function(e) {
+                e.preventDefault();
+                var url = $(this).attr('url');
+                
+                var completer = app.construct({
+	            	path: '',
+	            	method : 'POST',
+	            	url: url,
+	            	successHandler: function(data) {
+	            		if(data.message.success == true) {
+	            			native5.Notifications.show( "Project is marked complete.", {
+				                notificationType:'toast',
+				                title:'Success',
+				                position:'bottom',
+				                distance:'0px',
+				                timeout: 5000,
+				                persistent:false
+				            });
+	            		} else if (data.message.success == false) {
+	            			native5.Notifications.show( "An error occured.", {
+				                notificationType:'toast',
+				                title:'Error',
+				                position:'bottom',
+				                distance:'0px',
+				                timeout: 5000,
+				                persistent:false
+				            });
+	            		}
+	            	}
+	            });
+	            
+	            completer.serviceObject.invoke({id: projectId});
+	             
+            });
+            
+        });
+    </script>
+    
+
+    </div>
+    
+    <div id="sidebar" style="z-index: -2;">
+        <div class="nav-wrapper">
+            <div class="user">
+                <table border="0">
+                    <tr>
+                        <td class="user-image">
+                            <img class="image" src="" alt="" width="100" id="headerimage">
+                        </td>
+                        <td class="user-details">
+                            <h5><span id="headername"></span></h5>
+                            <p class="small"><span class="headeremail"></span></p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <nav class="nav">
+                <ul>
+                    <li><a href=timesheets.html class="page-link small"><i class="fa fa-puzzle-piece"></i>Timesheets</a>
+                    </li><li><a href=projects-test.html class="page-link small"><i class="fa fa-coffee"></i>Projects</a>
+                    </li><li><a href=profile-test.html class="page-link small"><i class="fa fa-user"></i>Profile</a>
+                    </li><li><a href="#" id="logout" class="page-link small"><i class="fa fa-sign-out"></i>Logout</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    
+  </body>
+</html>

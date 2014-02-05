@@ -62,14 +62,6 @@ var native5 = {};
         this.errorCallback = native5.core.defaultHandler;
 
         this.invoke = function(dataObj) {
-            
-            // Show loading image
-            
-            $('#page-wrap').addClass('fade');
-            $('body').prepend('<div id="loading-anim"><i class="fa fa-refresh fa-spin"></i>&nbsp;&nbsp;</div>');
-            
-            // Show loading image
-            
             var url_to_invoke = this.name;
              if(!(/^http:\/\//.test(url_to_invoke)) && !(/^https:\/\//.test(url_to_invoke)))
          		url_to_invoke = this.config.path + "/" +this.name;
@@ -93,10 +85,7 @@ var native5 = {};
             data.mode = this.config.mode;
             data.count = this.config.count;
             if (app.loader) app.loader.showLoadingMessage();
-            // data.rand_token = getParameterByName('rand_token');
-            
-            data.rand_token = localStorage.getItem('rand_token');
-            
+            data.rand_token = getParameterByName('rand_token');
             // Handling history
             if (app && app.currentService) data['N5_NAME'] = app.currentService;
             //window.history.replaceState(data, null, window.location.href);

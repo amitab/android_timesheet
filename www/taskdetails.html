@@ -116,12 +116,11 @@
     
     <!-- Loading custom js files -->    
     <script src="scripts/jquery.hammer.min.js" ></script>
-    <script src="scripts/native5.core.js"></script>
-    <script src="scripts/smart-list.js"></script>
     <script src="scripts/sidebar.js" ></script>
+    <script src="scripts/require.js"></script>
     
-<div id="header" style="height: 68px;">
-        <div class="wrapper">
+        <div id="header">
+        <div class="">
             <div class="header-item">
                 
                 <div class="item">
@@ -131,185 +130,76 @@
                     &nbsp;<img src="images/timesheet-logo.png" width="35" alt="">
                 </div>
                 <div class="item title">
-                    <h5>&nbsp;<span id="headertitle">Details</span></h5>
-                    <p class="very-small">&nbsp;&nbsp;<span class="headeremail"></span></p>
+                    <h5>&nbsp;</h5>
+                    <p class="very-small">&nbsp;&nbsp;</p>
                 </div>
             </div>
             
-           
+                            <div class="header-item trigger" style="height: 68px;">
+                    <h5><i class="fa fa-bars"></i></h5>
+                </div>
+                        
+                            <div class="header-item option" style="height: 68px; position: relative">
+                                                
+                    <a href=\timesheet\notifications?rand_token= >
+                                                <h5><i class="fa fa-globe"></i></h5>
+                    </a>
+                    
+                            </div>
         </div>
     </div>
-    <div id="page-wrap">
-    
+        
+    <div id="page-wrap">    
     <div class="row">
         <div class="eight columns centered">
             <section class="task-details">
                 <div class="warnings">
-                </div>
+                                    </div>
                 
                 <div class="title">
                     <h5>
-                        Details of <span class="taskName"></span>
+                        Details of 
                     </h5>
                 </div>
                 <table>
                     <tbody>
                         <tr>
                             <td>Task Name</td>
-                            <td><span class="taskName"></span></td>
-                        </tr>
-                        <tr>
-                            <td>Author</td>
-                            <td><span id="author"></span></td>
+                            <td></td>
                         </tr>
                         <tr>
                             <td>Start Time</td>
-                            <td><span id="startTime"></span></td>
+                            <td></td>
                         </tr>
                         <tr>
                             <td>End Time</td>
-                            <td><span id="endTime"></span></td>
+                            <td></td>
                         </tr>
                         <tr>
                             <td>Work Time</td>
-                            <td><span id="workTime"></span></td>
+                            <td></td>
                         </tr>
                         <tr>
                             <td>Location</td>
-                            <td><span id="location"></span></td>
+                            <td></td>
                         </tr>
     
                         <tr>
                             <td>Status</td>
-                            <td><span id="status"></span></td>
-                        </tr>
+                                                        <td><i class="fa fa-circle" style="color: #FFCC5C;"></i>&nbsp;Not Checked</td>
+                                                </tr>
                         
                     </tbody>
                 </table>
                 <div class="notes">
                     <h5 style="margin-bottom: 10px;">Notes</h5>
-                    <p><span id="notes"></span></p>
+                    <p></p>
                 </div>
             </section>
         </div>
     </div>
-            
-    <div class="task-options" style="text-align: center; display: none; padding-bottom: 20px;">
-        <div class="medium secondary btn">
-            <a href="#" mark="1" class="mark">
-            <i class="fa fa-check"></i>&nbsp;Accept</a>
-        </div>
-        <div class="medium danger btn">
-            <a href="#" mark="2" class="mark">
-            <i class="fa fa-times"></i>&nbsp;Reject</a>
-        </div>
-    </div> 
     
-    <script>
-        $(document).ready(function (e) {
-            
-            // LOAD USER DETAILS
-            
-            var user = JSON.parse(localStorage.getItem('user'));
-            
-            // LOAD SIDEBAR
-            
-            $('.headeremail').text(user.email);
-            $('#headername').text(user.first_name + ' ' + user.last_name);
-            $('#headerimage').attr({'src' : user.image});
-            
-            // LOAD COMPLETE
-            
-            var headerHandler = function(data) {
-                $('#header > .wrapper').append(data.message.header_options);
-            };
-            
-            var headerLoader = app.construct({
-                path : 'timesheet',
-                method : 'POST',
-                url : 'headerdata',
-                successHandler : headerHandler
-            });
-            
-            headerLoader.serviceObject.invoke({for: 'timesheets/task_details'});
-            
-            function getJsonFromUrl() {
-                var query = location.search.substr(1);
-                var data = query.split("&");
-                var result = {};
-                for(var i=0; i<data.length; i++) {
-                    var item = data[i].split("=");
-                    result[item[0]] = item[1];
-                }
-                return result;
-            }
-            var result = getJsonFromUrl();
-            
-            var successHandler = function(data) {
-                console.log(data);
-                
-                if(data.message.success == true) {
-                    console.log('Marked');
-                    
-                    var status;
-                    if (data.message.marked == 1) {
-                        status = '<i class="fa fa-check-circle" style="color: #00A388;"></i>&nbsp;Accepted';
-                    } else if (data.message.marked == 2) {
-                        status = '<i class="fa fa-times-circle" style="color: #FF6F69;"></i>&nbsp;Rejected';
-                    }
-                    $('#status').html(status);
-                    $('.task-options').css({'display' : 'none'});
-                    
-                    return;
-                } else if(data.message.success == false) {
-                    console.log('Not Marked');
-                    return;
-                }
-                
-                $('#author').text(data.message.author);
-                $('.taskName').text(data.message.task.taskName);
-                $('#startTime').text(data.message.task.prettyStartTime);
-                $('#endTime').text(data.message.task.prettyEndTime);
-                $('#workTime').text(data.message.task.prettyWorkTime);
-                $('#location').text(data.message.task.taskLocation);
-                $('#notes').text(data.message.task.taskNotes);
-                
-                var status;
-                if(data.message.task.taskStatus == 0) {
-                    status = '<i class="fa fa-circle" style="color: #FFCC5C;"></i>&nbsp;Not Checked';
-                } else if (data.message.task.taskStatus == 1) {
-                    status = '<i class="fa fa-check-circle" style="color: #00A388;"></i>&nbsp;Accepted';
-                } else if (data.message.task.taskStatus == 2) {
-                    status = '<i class="fa fa-times-circle" style="color: #FF6F69;"></i>&nbsp;Rejected';
-                }
-                
-                $('#status').html(status);
-                
-                if(data.message.task.taskStatus == 0 && data.message.is_admin == true) {
-                    $('.task-options').css({'display' : 'block'});
-                }
-                
-            };
-            
-            var id = result['id'];
-            var communicator = app.construct({
-                path : 'timesheet',
-                method : 'POST',
-                url : 'timesheets/task_details_data',
-                successHandler : successHandler
-            });
-            
-            $(document).hammer().on('tap', 'a.mark', function(e) {
-                e.preventDefault();
-                communicator.serviceObject.invoke({id: id, mark: $(this).attr('mark')});
-                return false;
-            });
-            
-            communicator.serviceObject.invoke({id: id});
-            
-        });
-    </script>
-    
+        
 
     </div>
     
@@ -319,21 +209,25 @@
                 <table border="0">
                     <tr>
                         <td class="user-image">
-                            <img class="image" src="" alt="" width="100" id="headerimage">
+                            <img class="image" src="" alt="" width="100">
                         </td>
                         <td class="user-details">
-                            <h5><span id="headername"></span></h5>
-                            <p class="small"><span class="headeremail"></span></p>
+                            <h5></h5>
+                            <p class="small"></p>
                         </td>
                     </tr>
                 </table>
             </div>
             <nav class="nav">
                 <ul>
-                    <li><a href=timesheets.html class="page-link small"><i class="fa fa-puzzle-piece"></i>Timesheets</a>
-                    </li><li><a href=projects-test.html class="page-link small"><i class="fa fa-coffee"></i>Projects</a>
-                    </li><li><a href=profile-test.html class="page-link small"><i class="fa fa-user"></i>Profile</a>
-                    </li><li><a href="#" id="logout" class="page-link small"><i class="fa fa-sign-out"></i>Logout</a>
+                    <li><a href=\timesheet\timesheets?rand_token= class="page-link small"><i class="fa fa-puzzle-piece"></i>Timesheets</a>
+                    <!--</li><li><a href=\timesheet\project?rand_token= class="page-link small"><i class="fa fa-folder-open"></i>Working Projects</a>
+                    </li><li><a href=\timesheet\project\created_projects?rand_token= class="page-link small"><i class="fa fa-briefcase">
+                    </i>Created Projects</a>
+                    </li><li><a href=\timesheet\project\create_new?rand_token= class="page-link small"><i class="fa fa-plus"></i>New Project</a>-->
+                    </li><li><a href=\timesheet\project?rand_token= class="page-link small"><i class="fa fa-folder-open"></i>Projects</a>
+                    </li><li><a href=\timesheet\profile?rand_token= class="page-link small"><i class="fa fa-user"></i>Profile</a>
+                    </li><li><a href=\timesheet\logout?rand_token= class="page-link small"><i class="fa fa-sign-out"></i>Logout</a>
                     </li>
                 </ul>
             </nav>

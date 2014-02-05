@@ -115,12 +115,11 @@
     
     <!-- Loading custom js files -->    
     <script src="scripts/jquery.hammer.min.js" ></script>
-    <script src="scripts/native5.core.js"></script>
-    <script src="scripts/smart-list.js"></script>
     <script src="scripts/sidebar.js" ></script>
+    <script src="scripts/require.js"></script>
     
-<div id="header" style="height: 68px;">
-        <div class="wrapper">
+        <div id="header">
+        <div class="">
             <div class="header-item">
                 
                 <div class="item">
@@ -130,42 +129,52 @@
                     &nbsp;<img src="images/timesheet-logo.png" width="35" alt="">
                 </div>
                 <div class="item title">
-                    <h5>&nbsp;<span id="headertitle">Profile</span></h5>
-                    <p class="very-small">&nbsp;&nbsp;<span class="headeremail"></span></p>
+                    <h5>&nbsp;</h5>
+                    <p class="very-small">&nbsp;&nbsp;</p>
                 </div>
             </div>
             
-           
+                            <div class="header-item trigger" style="height: 68px;">
+                    <h5><i class="fa fa-bars"></i></h5>
+                </div>
+                        
+                            <div class="header-item option" style="height: 68px; position: relative">
+                                                
+                    <a href=\timesheet\notifications?rand_token= >
+                                                <h5><i class="fa fa-globe"></i></h5>
+                    </a>
+                    
+                            </div>
         </div>
     </div>
+        
     <div id="page-wrap">
-
 
     <div class="row">
         <div class="six columns centered card">
             <section class="dashboard">
                 
                 <div class="display-picture">
-                    <img src="" id="userimage" alt="" class="image">
+                    <img src= alt="" class="image">
                 </div>
                 <div class="details">
-                    <h4 id="fullname"></h4>
-                    <p class="small" id="email"></p>
-                    <p class="small"><i class="fa fa-map-marker"></i>&nbsp;<span id="location"></span></p>
+                    <h4> </h4>
+                    <p class="small"></p>
+                    <p class="small"><i class="fa fa-map-marker"></i>&nbsp;</p>
                 </div>
                 <div class="stats">
                     <table>
                         <tr>
                             <td>
-                                <p class="time"><span id="projects"></span></p>
+                                <p class="time"></p>
                                 <p class="type">Projects</p>
                             </td>
                             <td>
-                                <p class="time"><span id="timesheets"></span></p>
+                                <p class="time"></p>
                                 <p class="type">Timesheets</p>
                             </td>
                             <td>
-                                <p class="time"><span id="hours"></span></p>
+                                <p class="time"></p>
                                 <p class="type">Hours</p>
                             </td>
                         </tr>
@@ -173,7 +182,7 @@
                 </div>
                                     <div class="options" style="padding: 10px; text-align: center;">
                         <div class="medium primary btn">
-                            <a href="editprofile.html" style="font-size: 14px;" >
+                            <a href=\timesheet\profile\edit_profile?rand_token= style="font-size: 14px;" >
                             <i class="fa fa-edit"></i>&nbsp;Edit Profile</a>
                         </div>
                     </div>
@@ -181,88 +190,7 @@
         </div>
     </div>
 
-    <script>
-        $(document).ready(function (e) {
-            
-            // LOAD USER DETAILS
-            
-            var user = JSON.parse(localStorage.getItem('user'));
-            
-            // LOAD SIDEBAR
-            
-            $('.headeremail').text(user.email);
-            $('#headername').text(user.first_name + ' ' + user.last_name);
-            $('#headerimage').attr({'src' : user.image});
-            
-            // LOAD COMPLETE
-            
-            function getJsonFromUrl() {
-                var query = location.search.substr(1);
-                var data = query.split("&");
-                var result = {};
-                for(var i=0; i<data.length; i++) {
-                    var item = data[i].split("=");
-                    result[item[0]] = item[1];
-                }
-                return result;
-            }
-            
-            var successHandler = function(data) {
-                console.log(data);
-                
-                //$('#header > .wrapper').append(data.message.header_options);
-                
-                $('#hours').text(data.message.stats.hours);
-                $('#timesheets').text(data.message.stats.timesheets);
-                $('#projects').text(data.message.stats.projects);
-                
-                $('#email').text(data.message.user.userMail);
-                $('#fullname').text(data.message.user.userFirstName + ' ' + data.message.user.userLastName);
-                $('#location').text(data.message.user.userLocation);
-                
-                $('#userimage').attr({'src' : data.message.image_path + data.message.user.userImageUrl});
-            };
-            
-            var communicator = app.construct({
-                path : 'timesheet',
-                method : 'POST',
-                url : 'profile/default_data',
-                successHandler : successHandler
-            });
-            
-            var headerHandler = function(data) {
-                $('#header > .wrapper').append(data.message.header_options);
-            };
-            
-            var headerLoader = app.construct({
-                path : 'timesheet',
-                method : 'POST',
-                url : 'headerdata',
-                successHandler : headerHandler
-            });
-            
-            headerLoader.serviceObject.invoke({for: 'profile'});
-            
-            
-            var result = getJsonFromUrl();
-            var id = result['id'];
-            if(typeof id === 'undefined') {
-                id = 0;
-                $('#email').text(user.email);
-                $('#fullname').text(user.first_name + ' ' + user.last_name);
-                $('#location').text(user.location);
-                $('#userimage').attr({'src' : user.image});
-                
-                $('#hours').text(user.stats.hours);
-                $('#timesheets').text(user.stats.timesheets);
-                $('#projects').text(user.stats.projects);
-            } else {
-                communicator.serviceObject.invoke({id: id});
-            }
-            
-        });
-    </script>
-    
+
 
     </div>
     
@@ -272,21 +200,25 @@
                 <table border="0">
                     <tr>
                         <td class="user-image">
-                            <img class="image" src="" alt="" width="100" id="headerimage">
+                            <img class="image" src="" alt="" width="100">
                         </td>
                         <td class="user-details">
-                            <h5><span id="headername"></span></h5>
-                            <p class="small"><span class="headeremail"></span></p>
+                            <h5></h5>
+                            <p class="small"></p>
                         </td>
                     </tr>
                 </table>
             </div>
             <nav class="nav">
                 <ul>
-                    <li><a href=timesheets.html class="page-link small"><i class="fa fa-puzzle-piece"></i>Timesheets</a>
-                    </li><li><a href=projects-test.html class="page-link small"><i class="fa fa-coffee"></i>Projects</a>
-                    </li><li><a href=profile-test.html class="page-link small"><i class="fa fa-user"></i>Profile</a>
-                    </li><li><a href="#" id="logout" class="page-link small"><i class="fa fa-sign-out"></i>Logout</a>
+                    <li><a href=\timesheet\timesheets?rand_token= class="page-link small"><i class="fa fa-puzzle-piece"></i>Timesheets</a>
+                    <!--</li><li><a href=\timesheet\project?rand_token= class="page-link small"><i class="fa fa-folder-open"></i>Working Projects</a>
+                    </li><li><a href=\timesheet\project\created_projects?rand_token= class="page-link small"><i class="fa fa-briefcase">
+                    </i>Created Projects</a>
+                    </li><li><a href=\timesheet\project\create_new?rand_token= class="page-link small"><i class="fa fa-plus"></i>New Project</a>-->
+                    </li><li><a href=\timesheet\project?rand_token= class="page-link small"><i class="fa fa-folder-open"></i>Projects</a>
+                    </li><li><a href=\timesheet\profile?rand_token= class="page-link small"><i class="fa fa-user"></i>Profile</a>
+                    </li><li><a href=\timesheet\logout?rand_token= class="page-link small"><i class="fa fa-sign-out"></i>Logout</a>
                     </li>
                 </ul>
             </nav>

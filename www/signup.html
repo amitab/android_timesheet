@@ -115,39 +115,56 @@
     
     <!-- Loading custom js files -->    
     <script src="scripts/jquery.hammer.min.js" ></script>
-    <script src="scripts/native5.core.js"></script>
-    <script src="scripts/smart-list.js"></script>
     <script src="scripts/sidebar.js" ></script>
+    <script src="scripts/require.js"></script>
     
-    <div id="page-wrap" style="padding-top: 0;">
-    
+        <div id="header">
+        <div class="">
+            <div class="header-item">
+                
+                <div class="item">
+                    <i class="fa fa-angle-left" id="back"></i>
+                </div>
+                <div class="item logo">
+                    &nbsp;<img src="images/timesheet-logo.png" width="35" alt="">
+                </div>
+                <div class="item title">
+                    <h5>&nbsp;</h5>
+                    <p class="very-small">&nbsp;&nbsp;</p>
+                </div>
+            </div>
+            
+                            <div class="header-item trigger" style="height: 68px;">
+                    <h5><i class="fa fa-bars"></i></h5>
+                </div>
+                        
+                            <div class="header-item option" style="height: 68px; position: relative">
+                                                
+                    <a href=\timesheet\notifications?rand_token= >
+                                                <h5><i class="fa fa-globe"></i></h5>
+                    </a>
+                    
+                            </div>
+        </div>
+    </div>
+        
+    <div id="page-wrap">    
     <div class="row">
         <div class="six columns centered card">
-            <section class="new-profile" style="margin-top: 10px;">
+            <section class="new-profile">
                 
                 <div class="title">
                     <h5>Sign Up</h5>
                 </div>
-                <form action="" method="post" id="new-user-form">
-                    <div class="warnings">
-                        
-                                                
-                                                
-                                                
-                    </div>
+                <form action="" method="post" class="new-user-form">
+                    <div class="warnings"></div>
                     <div class="append field">
-                        <input class="input" type="text" placeholder="First Name" name="first_name" />
+                        <input class="input" type="text" placeholder="First Name" name="last_name" />
                         <span class="adjoined"><i class="fa fa-user"></i></span>
                     </div>
                     <div class="append field">
-                        <input class="input" type="text" placeholder="Last Name" name="last_name" />
+                        <input class="input" type="text" placeholder="Last Name" name="first_name" />
                         <span class="adjoined"><i class="fa fa-user"></i></span>
-                    </div>
-                    <div style="margin-bottom: 6px;">
-                        <select name="sex" class="field">
-                            <option value="m">Male</option>
-                            <option value="f">Female</option>
-                        </select>
                     </div>
                     <div class="append field">
                         <input class="input" type="text" placeholder="Email" name="email" />
@@ -167,7 +184,7 @@
                     </div>
                     
                     <div class="submit" style="text-align: center;">
-                        <div class="medium secondary btn"><a href="#" id="sign-up-button">Sign Up</a></div>
+                        <div class="medium secondary btn"><a href="http:///timesheet/home\signup" id="submit">Sign Up</a></div>
                     </div>
                 </form>
                          
@@ -175,49 +192,38 @@
         </div>
     </div>
 
-    <script>
-        $(document).ready(function() {
-            
-            $.fn.serializeObject = function() {
-                var o = {};
-                var a = this.serializeArray();
-                $.each(a, function() {
-                    if (o[this.name] !== undefined) {
-                        if (!o[this.name].push) {
-                            o[this.name] = [o[this.name]];
-                        }
-                        o[this.name].push(this.value || '');
-                    } else {
-                        o[this.name] = this.value || '';
-                    }
-                });
-                return o;
-            };
-            
-            var successHandler = function(data) {
-                if(data.message.success == true) {
-                    alert('success');
-                    window.location.href = "auth.html";
-                } else {
-                    alert('failure');
-                }
-            };
-            
-            var communicator = app.construct({
-                method : 'POST',
-                url : 'home/signup_data',
-                successHandler : successHandler
-            });
-            
-            $(document).hammer().on('tap', 'a#sign-up-button', function(e) {
-                e.preventDefault();
-                var userData = $('form#new-user-form').serializeObject();
-                communicator.serviceObject.invoke(userData);
-            });
-        });
-    </script>
 
-
+    </div>
+    
+    <div id="sidebar" style="z-index: -2;">
+        <div class="nav-wrapper">
+            <div class="user">
+                <table border="0">
+                    <tr>
+                        <td class="user-image">
+                            <img class="image" src="" alt="" width="100">
+                        </td>
+                        <td class="user-details">
+                            <h5></h5>
+                            <p class="small"></p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <nav class="nav">
+                <ul>
+                    <li><a href=\timesheet\timesheets?rand_token= class="page-link small"><i class="fa fa-puzzle-piece"></i>Timesheets</a>
+                    <!--</li><li><a href=\timesheet\project?rand_token= class="page-link small"><i class="fa fa-folder-open"></i>Working Projects</a>
+                    </li><li><a href=\timesheet\project\created_projects?rand_token= class="page-link small"><i class="fa fa-briefcase">
+                    </i>Created Projects</a>
+                    </li><li><a href=\timesheet\project\create_new?rand_token= class="page-link small"><i class="fa fa-plus"></i>New Project</a>-->
+                    </li><li><a href=\timesheet\project?rand_token= class="page-link small"><i class="fa fa-folder-open"></i>Projects</a>
+                    </li><li><a href=\timesheet\profile?rand_token= class="page-link small"><i class="fa fa-user"></i>Profile</a>
+                    </li><li><a href=\timesheet\logout?rand_token= class="page-link small"><i class="fa fa-sign-out"></i>Logout</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
     </div>
     
   </body>

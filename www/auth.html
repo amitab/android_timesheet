@@ -115,13 +115,40 @@
     
     <!-- Loading custom js files -->    
     <script src="scripts/jquery.hammer.min.js" ></script>
-    <script src="scripts/native5.core.js"></script>
-    <script src="scripts/native5.notifications.js"></script>
-    <script src="scripts/smart-list.js"></script>
     <script src="scripts/sidebar.js" ></script>
+    <script src="scripts/require.js"></script>
     
-    <div id="page-wrap">
-    <div class="row">
+        <div id="header">
+        <div class="">
+            <div class="header-item">
+                
+                <div class="item">
+                    <i class="fa fa-angle-left" id="back"></i>
+                </div>
+                <div class="item logo">
+                    &nbsp;<img src="images/timesheet-logo.png" width="35" alt="">
+                </div>
+                <div class="item title">
+                    <h5>&nbsp;</h5>
+                    <p class="very-small">&nbsp;&nbsp;</p>
+                </div>
+            </div>
+            
+                            <div class="header-item trigger" style="height: 68px;">
+                    <h5><i class="fa fa-bars"></i></h5>
+                </div>
+                        
+                            <div class="header-item option" style="height: 68px; position: relative">
+                                                
+                    <a href=\timesheet\notifications?rand_token= >
+                                                <h5><i class="fa fa-globe"></i></h5>
+                    </a>
+                    
+                            </div>
+        </div>
+    </div>
+        
+    <div id="page-wrap">    <div class="row">
         <div class="six columns centered login">
             <div class="login-wrapper">
                 <div class="hello">
@@ -137,15 +164,12 @@
                         <span class="adjoined"><i class="fa fa-user"></i></span>
                     </div>
                     <div class="append field">
-                        <input class="input" type="password" id="password" placeholder="Password" name="password" />
+                        <input class="input" type="password" placeholder="Password" name="password" />
                         <span class="adjoined"><i class="fa fa-lock"></i></span>
                     </div>
                     <div class="field form-submit-button">
                         <div class="medium primary btn">
-                            <a href="#" id="login-button">Login</a>
-                        </div>
-                        <div class="medium secondary btn">
-                            <a href="signup.html">Signup</a>
+                            <a href="#" id="login-button" onclick="submit();">Login</a>
                         </div>
                     </div>
                 </form>
@@ -153,49 +177,39 @@
             </div>
         </div>
     </div>
-    <script>
-        
-        $(document).ready(function (e) {
-            
-            var successHandler = function(data) {
-                if(data.message.success == true) {
-                    localStorage.setItem('rand_token', data.message.rand_token);
-                    localStorage.setItem('user', JSON.stringify(data.message.user_data));
-                    
-                    window.location.href = 'profile-test.html';
-                } else if(data.message.success == false) {
-                    
-                    native5.Notifications.show( "Invalid username\password combination.", {
-                        notificationType:'toast',
-                        title:'Error',
-                        position:'bottom',
-                        distance:'0px',
-                        timeout: 5000,
-                        persistent:false
-                    });
-                    
-                }
-            };
-            
-            var communicator = app.construct({
-                method : 'POST',
-                url : 'login',
-                successHandler : successHandler
-            });
-            
-            $(document).hammer().on('tap', '#login-button', function(e) {
-
-                e.preventDefault();
-                communicator.serviceObject.invoke({email:$('#email').val(), password:$('#password').val() });
-                return false;
-            });
-            
-            
-        });
-        
-    </script>
     
 
+    </div>
+    
+    <div id="sidebar" style="z-index: -2;">
+        <div class="nav-wrapper">
+            <div class="user">
+                <table border="0">
+                    <tr>
+                        <td class="user-image">
+                            <img class="image" src="" alt="" width="100">
+                        </td>
+                        <td class="user-details">
+                            <h5></h5>
+                            <p class="small"></p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <nav class="nav">
+                <ul>
+                    <li><a href=\timesheet\timesheets?rand_token= class="page-link small"><i class="fa fa-puzzle-piece"></i>Timesheets</a>
+                    <!--</li><li><a href=\timesheet\project?rand_token= class="page-link small"><i class="fa fa-folder-open"></i>Working Projects</a>
+                    </li><li><a href=\timesheet\project\created_projects?rand_token= class="page-link small"><i class="fa fa-briefcase">
+                    </i>Created Projects</a>
+                    </li><li><a href=\timesheet\project\create_new?rand_token= class="page-link small"><i class="fa fa-plus"></i>New Project</a>-->
+                    </li><li><a href=\timesheet\project?rand_token= class="page-link small"><i class="fa fa-folder-open"></i>Projects</a>
+                    </li><li><a href=\timesheet\profile?rand_token= class="page-link small"><i class="fa fa-user"></i>Profile</a>
+                    </li><li><a href=\timesheet\logout?rand_token= class="page-link small"><i class="fa fa-sign-out"></i>Logout</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
     </div>
     
   </body>

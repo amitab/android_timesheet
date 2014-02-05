@@ -177,27 +177,4 @@ $(document).ready(function(){
         form.submit();
     });
     
-    var logoutHandler = function(data) {
-    	if(data.message.success == true) {
-    		alert("Logout Successful");
-    		localStorage.removeItem('rand_token');
-    		localStorage.removeItem('user');
-            
-    		window.location.href = "auth.html";
-    	} else {
-    		alert("Logout Unsucessful");
-    	}
-    };
-    
-    var disconnector = app.construct({
-    	method: 'POST',
-    	url: 'logout',
-    	successHandler: logoutHandler
-    });
-    
-    $(document).hammer().on('tap', '#logout', function(e) {
-    	e.preventDefault();
-    	disconnector.serviceObject.invoke();
-    });
-    
 });

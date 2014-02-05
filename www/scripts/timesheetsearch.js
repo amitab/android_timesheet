@@ -2,9 +2,6 @@ $(document).ready(function() {
     var offset = 0;
     var load = false;
     
-    var ua = navigator.userAgent,
-    clickevent = (ua.match(/iPad/i) || ua.match(/iPhone/i) || ua.match(/Android/i)) ? "touchstart" : "click";
-    
     function emptyListCheck() {
         if($('div#timesheet-list').children().length > 0) {
             $('div#timesheet-list').removeClass('empty-list');
@@ -93,7 +90,7 @@ $(document).ready(function() {
     
 	var prevQuery = '';
 	
-    $(document).on(clickevent, '#search-button', function(e){
+    $('#search-button').click(function(e){
         e.preventDefault();
         var searchBox = $($(this).attr('href'));
         
@@ -127,13 +124,13 @@ $(document).ready(function() {
     // load initial data
     communicator.serviceObject.invoke({default: true});
     
-    $(document).hammer().on('tap', 'tr.timesheet-details', function(e) {
+    $(document).on('click', 'tr.timesheet-details', function(e) {
         e.preventDefault();
-        var url = $('input#url').attr('timesheet-details-path') + '?id=' + $(this).attr('id');
+        var url = $('input#url').attr('timesheet-details-path') + '&id=' + $(this).attr('id');
         window.location.href = url;
     });
     
-    $(document).hammer().on('tap', 'div#load-more', function(e) {
+    $(document).on('click', 'div#load-more', function(e) {
         e.preventDefault();
         // Search using ajax
         load = true;

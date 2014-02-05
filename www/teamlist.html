@@ -115,12 +115,11 @@
     
     <!-- Loading custom js files -->    
     <script src="scripts/jquery.hammer.min.js" ></script>
-    <script src="scripts/native5.core.js"></script>
-    <script src="scripts/smart-list.js"></script>
     <script src="scripts/sidebar.js" ></script>
+    <script src="scripts/require.js"></script>
     
-<div id="header" style="height: 68px;">
-        <div class="wrapper">
+        <div id="header">
+        <div class="">
             <div class="header-item">
                 
                 <div class="item">
@@ -130,111 +129,44 @@
                     &nbsp;<img src="images/timesheet-logo.png" width="35" alt="">
                 </div>
                 <div class="item title">
-                    <h5>&nbsp;<span id="headertitle">Team</span></h5>
-                    <p class="very-small">&nbsp;&nbsp;<span class="headeremail"></span></p>
+                    <h5>&nbsp;</h5>
+                    <p class="very-small">&nbsp;&nbsp;</p>
                 </div>
             </div>
             
-           
+                            <div class="header-item trigger" style="height: 68px;">
+                    <h5><i class="fa fa-bars"></i></h5>
+                </div>
+                        
+                            <div class="header-item option" style="height: 68px; position: relative">
+                                                
+                    <a href=\timesheet\notifications?rand_token= >
+                                                <h5><i class="fa fa-globe"></i></h5>
+                    </a>
+                    
+                            </div>
         </div>
     </div>
+        
     <div id="page-wrap">
-
     <div class="row">
         <div class="six columns centered card">
             <section class="list" id="search-results" style="margin: 10% 0;">
-                <ul>
-                    
-                    
+                                    <ul class="empty-list">
+                                    
+                                            
                 </ul>
             </section>
         </div>
     </div>
     
-    <script src="scripts/native5.core.js" ></script>
-    <script src="scripts/smart-list.js" ></script>
     <script>
         $(document).ready(function() {
-            
-            // LOAD USER DETAILS
-            
-            var user = JSON.parse(localStorage.getItem('user'));
-            
-            // LOAD SIDEBAR
-            
-            $('.headeremail').text(user.email);
-            $('#headername').text(user.first_name + ' ' + user.last_name);
-            $('#headerimage').attr({'src' : user.image});
-            
-            // LOAD COMPLETE
-            
-            var headerHandler = function(data) {
-                $('#header > .wrapper').append(data.message.header_options);
-            };
-            
-            var headerLoader = app.construct({
-                path : 'timesheet',
-                method : 'POST',
-                url : 'headerdata',
-                successHandler : headerHandler
-            });
-            
-            headerLoader.serviceObject.invoke({for: 'project/team_list'});
-            
-            var searchList = smartList.createList({element : '#search-results'});
-            function getJsonFromUrl() {
-                var query = location.search.substr(1);
-                var data = query.split("&");
-                var result = {};
-                for(var i=0; i<data.length; i++) {
-                    var item = data[i].split("=");
-                    result[item[0]] = item[1];
-                }
-                return result;
-            }
-            
-            var result = getJsonFromUrl();
-            var successHandler = function(data) {
-                console.log(data);
-                
-                $.each(data.message.users, function(index, value) {
-                    var listitem = '';
-                    listitem += '<li href="viewprofile.html';
-                    listitem += '?id=' + value.userId +'">';
-                    listitem += '<table><tbody><tr>';
-                    listitem += '<td>';
-                    listitem += '<img src=' + data.message.image_path + value.userImageUrl + '>';
-                    listitem += '</td>';
-                    listitem += '<td>';
-                    listitem += '<h5>' + value.userFirstName + ' ' + value.userLastName + '</h5>';
-                    listitem += '<p class="small email">' + value.userMail + '</p>';
-                    listitem += '</td>';
-                    listitem += '</tr></tbody></table>';
-                    listitem += '</li>';
-                    $('#search-results > ul').append(listitem);
-                });
-                
-                searchList.activate();
-                searchList.emptyListCheck();
-            };
-            
-            var communicator = app.construct({
-                path : 'timesheet',
-                method : 'POST',
-                url : 'project/team_list_data',
-                successHandler : successHandler
-            });
-            
-            var id = result['id'];
-            
-            $(document).hammer().on('tap', 'li.list-item', function(e) {
+            $(document).on('click', 'li.list-item', function(e) {
                 e.preventDefault();
                 var url = $(this).attr('href');
                 window.location.href = url;
             });
-            
-            communicator.serviceObject.invoke({id: id});
-            
         });
     </script>
     
@@ -247,21 +179,25 @@
                 <table border="0">
                     <tr>
                         <td class="user-image">
-                            <img class="image" src="" alt="" width="100" id="headerimage">
+                            <img class="image" src="" alt="" width="100">
                         </td>
                         <td class="user-details">
-                            <h5><span id="headername"></span></h5>
-                            <p class="small"><span class="headeremail"></span></p>
+                            <h5></h5>
+                            <p class="small"></p>
                         </td>
                     </tr>
                 </table>
             </div>
             <nav class="nav">
                 <ul>
-                    <li><a href=timesheets.html class="page-link small"><i class="fa fa-puzzle-piece"></i>Timesheets</a>
-                    </li><li><a href=projects-test.html class="page-link small"><i class="fa fa-coffee"></i>Projects</a>
-                    </li><li><a href=profile-test.html class="page-link small"><i class="fa fa-user"></i>Profile</a>
-                    </li><li><a href="#" id="logout" class="page-link small"><i class="fa fa-sign-out"></i>Logout</a>
+                    <li><a href=\timesheet\timesheets?rand_token= class="page-link small"><i class="fa fa-puzzle-piece"></i>Timesheets</a>
+                    <!--</li><li><a href=\timesheet\project?rand_token= class="page-link small"><i class="fa fa-folder-open"></i>Working Projects</a>
+                    </li><li><a href=\timesheet\project\created_projects?rand_token= class="page-link small"><i class="fa fa-briefcase">
+                    </i>Created Projects</a>
+                    </li><li><a href=\timesheet\project\create_new?rand_token= class="page-link small"><i class="fa fa-plus"></i>New Project</a>-->
+                    </li><li><a href=\timesheet\project?rand_token= class="page-link small"><i class="fa fa-folder-open"></i>Projects</a>
+                    </li><li><a href=\timesheet\profile?rand_token= class="page-link small"><i class="fa fa-user"></i>Profile</a>
+                    </li><li><a href=\timesheet\logout?rand_token= class="page-link small"><i class="fa fa-sign-out"></i>Logout</a>
                     </li>
                 </ul>
             </nav>

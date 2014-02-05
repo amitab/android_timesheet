@@ -3,25 +3,13 @@ var app = (function (app, native5) {
     
     var createService = function(url, config, successHandler) {
         var service =  new native5.core.Service(url, config);
-        service.configureHandlers(
-        function(data) {
-            $('#page-wrap').removeClass('fade');
-            $('#loading-anim').remove();
-            successHandler(data);
-        }, function(){
-            $('#page-wrap').removeClass('fade');
-            $('#loading-anim').remove();
-            alert("FAILURE");
-            console.log(this);
-        });
+        service.configureHandlers(successHandler, function(){console.log(this);});
         return service;
     };
     
-    // http://apps.sandbox.native5.com/zbdGs8Z2U1389602848
-    
     app.construct = function(args) {
         this.config = {
-            path : 'http://192.168.1.164/timesheet',
+            path : args.path,
             method : args.method,
             mode : 'ui'
         };
@@ -30,10 +18,6 @@ var app = (function (app, native5) {
             serviceObject : createService(args.url, this.config, args.successHandler),
         };
         
-    };
-    
-    app.returnPath = function(args) {
-        return 'http://192.168.1.164/timesheet';  
     };
     
     return app;

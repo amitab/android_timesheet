@@ -47,8 +47,8 @@ $(document).ready(function() {
             list += '<li class="project-link" id="' + value.projectId + '">';
             list += '<table>';
             list += '<tr>';
-            list += '<td><h6 class="no-padding"><span style="color: #d04526;">';
-            list += '' + value.projectName + '</span></h6></td>';
+            list += '<td><h6 class="no-padding"><a href="#"';
+            list += '">' + value.projectName + '</a></h6></td>';
             list += '<td><p class="right small">' + state + '</p></td>';
             list += '</tr>';
             list += '</table>';
@@ -87,7 +87,7 @@ $(document).ready(function() {
     
     var prevQuery = '';
     
-    $(document).on(clickevent, '#search-button', function(e){
+    $('#search-button').click(function(e){
         e.preventDefault();
         var searchBox = $($(this).attr('href'));
         
@@ -127,9 +127,9 @@ $(document).ready(function() {
     searchList.emptyListCheck();
     
     // Link to the details page
-    $(document).hammer().on('tap', 'li.project-link', function(e) {
+    $(document).on(clickevent, 'li.project-link', function(e) {
         e.preventDefault();
-        var url = $('input#url').attr('project-details-path') + '?id=' + $(this).attr('id');
+        var url = $('input#url').attr('project-details-path') + '&id=' + $(this).attr('id');
         window.location.href = url;
     });
     
@@ -140,11 +140,6 @@ $(document).ready(function() {
         args.option = selectedOption;
         prevQuery = '';
         communicator.serviceObject.invoke(args);
-    });
-    
-    $(document).on(clickevent, 'td#new-project', function(e) {
-        e.preventDefault();
-        window.location.href = $(this).attr('href');
     });
     
 });

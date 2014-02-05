@@ -116,13 +116,11 @@
     
     <!-- Loading custom js files -->    
     <script src="scripts/jquery.hammer.min.js" ></script>
-    <script src="scripts/native5.core.js"></script>
-    <script src="scripts/native5.notifications.js"></script>
-    <script src="scripts/smart-list.js"></script>
     <script src="scripts/sidebar.js" ></script>
+    <script src="scripts/require.js"></script>
     
-<div id="header" style="height: 68px;">
-        <div class="wrapper">
+        <div id="header">
+        <div class="">
             <div class="header-item">
                 
                 <div class="item">
@@ -132,46 +130,64 @@
                     &nbsp;<img src="images/timesheet-logo.png" width="35" alt="">
                 </div>
                 <div class="item title">
-                    <h5>&nbsp;<span id="headertitle">New Task</span></h5>
-                    <p class="very-small">&nbsp;&nbsp;<span class="headeremail"></span></p>
+                    <h5>&nbsp;</h5>
+                    <p class="very-small">&nbsp;&nbsp;</p>
                 </div>
             </div>
             
-           
+                            <div class="header-item trigger" style="height: 68px;">
+                    <h5><i class="fa fa-bars"></i></h5>
+                </div>
+                        
+                            <div class="header-item option" style="height: 68px; position: relative">
+                                                
+                    <a href=\timesheet\notifications?rand_token= >
+                                                <h5><i class="fa fa-globe"></i></h5>
+                    </a>
+                    
+                            </div>
         </div>
     </div>
-    <div id="page-wrap">
-    
+        
+    <div id="page-wrap">    
     <div class="row">
         <div class="eight columns centered">
             <section class="new-task">
                 
-                <form action="" method="post" id="new-task">
+                <form action="" method="post">
+                                                            
+                                        
+                    <input type="hidden" name="project_id" value="">
                     
                     <div class="title">
-                        <h5>New Task for <span id="projectname"></span></h5>
+                        <h5> for </h5>
                     </div>
                     <div class="warnings">
-                        
-                    </div>
+                                            </div>
                     <div class="field append">
-                        <input class="input" type="text" placeholder="Task Name" name="task_name" id="taskname" >
+                        <input class="input" type="text" placeholder="Task Name" name="task_name" 
+                        />
                         <span class="adjoined"><i class="fa fa-pencil-square-o"></i></span>
                     </div>
                     
                     <div class="field">
                         <label class="medium" for="start_time"><i class="fa fa-clock-o"></i>&nbsp;Start Time : </label>
-                        <input name="start_time" type="datetime-local" id="starttime">
+                        <input name="start_time" type="datetime-local" 
+                        >
                     </div>
                     <div class="field">
                         <label class="medium" for="end_time"><i class="fa fa-clock-o"></i>&nbsp;End Time : </label>
-                        <input name="end_time" type="datetime-local" id="endtime">
+                        <input name="end_time" type="datetime-local" 
+                        >
                     </div>
                     <div class="field">
-                        <textarea class="input textarea" placeholder="Notes" name="notes" id="notes"></textarea>
+                        <textarea class="input textarea" placeholder="Notes" name="notes"></textarea>
+                        
                     </div>
+                        
                     <div class="field append">
-                        <input class="input first-child" type="text" placeholder="Location" name="location" id="location"/>
+                        <input class="input first-child" type="text" placeholder="Location" name="location" 
+                        />
                         <span class="adjoined"><i class="fa fa-map-marker"></i></span>
                     </div>
                 </form>
@@ -183,144 +199,14 @@
     <script>
         $(document).ready(function() {
             
-            // LOAD USER DETAILS
+            var ua = navigator.userAgent,
+            clickevent = (ua.match(/iPad/i) || ua.match(/iPhone/i) || ua.match(/Android/i)) ? "touchstart" : "click";
             
-            var user = JSON.parse(localStorage.getItem('user'));
-            
-            // LOAD SIDEBAR
-            
-            $('.headeremail').text(user.email);
-            $('#headername').text(user.first_name + ' ' + user.last_name);
-            $('#headerimage').attr({'src' : user.image});
-            
-            // LOAD COMPLETE
-            
-            var pressed = false;
-            var headerHandler = function(data) {
-                $('#header > .wrapper').append(data.message.header_options);
-            };
-            
-            var headerLoader = app.construct({
-                path : 'timesheet',
-                method : 'POST',
-                url : 'headerdata',
-                successHandler : headerHandler
-            });
-            
-            headerLoader.serviceObject.invoke({for: 'timesheets/new_task'});
-            
-             $.fn.serializeObject = function() {
-                var o = {};
-                var a = this.serializeArray();
-                $.each(a, function() {
-                    if (o[this.name] !== undefined) {
-                        if (!o[this.name].push) {
-                            o[this.name] = [o[this.name]];
-                        }
-                        o[this.name].push(this.value || '');
-                    } else {
-                        o[this.name] = this.value || '';
-                    }
-                });
-                return o;
-            };
-                        
-            function getJsonFromUrl() {
-                var query = location.search.substr(1);
-                var data = query.split("&");
-                var result = {};
-                for(var i=0; i<data.length; i++) {
-                    var item = data[i].split("=");
-                    result[item[0]] = item[1];
-                }
-                return result;
-            }
-            
-            var result = getJsonFromUrl();
-            var successHandler = function(data) {
-               if(data.message.success == true) {
-                    native5.Notifications.show( "Task successfuly created.", {
-                        notificationType:'toast',
-                        title:'Success',
-                        position:'bottom',
-                        distance:'0px',
-                        timeout: 5000,
-                        persistent:false
-                    });
-                    
-                    window.location.href = "sheetdetails.html?id=" + data.message.timesheet_id;
-                    return;
-                } else if (data.message.success == false) {
-                    native5.Notifications.show( "Task creation failed.", {
-                        notificationType:'toast',
-                        title:'Error',
-                        position:'bottom',
-                        distance:'0px',
-                        timeout: 5000,
-                        persistent:false
-                    });
-                    pressed = false;
-                    return;
-                } else {
-                    $('#projectname').text(data.message.project_name);
-                }
-            };
-            
-            var communicator = app.construct({
-                path : 'timesheet',
-                method : 'POST',
-                url : 'timesheets/create_new_task_data',
-                successHandler : successHandler
-            });
-            
-            var timesheetId = result['old_timesheet_id']; // OLD TIMESHEET ID
-            if(typeof timesheetId === 'undefined') {
-                timesheetId = null;
-            }
-            var projectId = result['project_id'];  // PROJECT ID
-            
-            var workTime = result['work_time'];  // WORK TIME
-            if(typeof workTime === 'undefined') {
-                workTime = null;
-            } else {
-                $('#starttime').attr({'type' : 'text'});
-                document.getElementById('starttime').readOnly = true;
-                $('#endtime').attr({'type' : 'text'});
-                document.getElementById('endtime').readOnly = true;
-            }
-            
-            var startTime = decodeURIComponent(result['start_time']);
-            if(typeof startTime === 'undefined') {
-                startTime = null;
-            } else {
-                startTime = startTime.replace(/\+/g, ' ');
-                $('#starttime').val(startTime);
-            }
-            var endTime = decodeURIComponent(result['end_time']);
-            if(typeof endTime === 'undefined') {
-                endTime = null;
-            } else {
-                endTime = endTime.replace(/\+/g, ' ');
-                $('#endtime').val(endTime);
-            }
-            
-            communicator.serviceObject.invoke({project_id: projectId});
-            
-            $(document).hammer().on('tap', 'div#save-form', function(e) {
+            $(document).on(clickevent, 'div#save-form', function(e) {
                 e.preventDefault();
-                if(!pressed) {
-                	pressed = true;
-                	var formData = $('form#new-task').serializeObject();
-	                formData.project_id = projectId;
-	                formData.timesheet_id = timesheetId;
-	                formData.work_time = workTime;
-	                formData.new = true;
-	                communicator.serviceObject.invoke(formData);
-                } else {
-                	alert("Please wait for the server to respond.");
-                }
+                $('form').append('<input type="hidden" name="new" value="1">');
+                $('form').submit();
             });
-            
         });
     </script>
     
@@ -333,21 +219,25 @@
                 <table border="0">
                     <tr>
                         <td class="user-image">
-                            <img class="image" src="" alt="" width="100" id="headerimage">
+                            <img class="image" src="" alt="" width="100">
                         </td>
                         <td class="user-details">
-                            <h5><span id="headername"></span></h5>
-                            <p class="small"><span class="headeremail"></span></p>
+                            <h5></h5>
+                            <p class="small"></p>
                         </td>
                     </tr>
                 </table>
             </div>
             <nav class="nav">
                 <ul>
-                    <li><a href=timesheets.html class="page-link small"><i class="fa fa-puzzle-piece"></i>Timesheets</a>
-                    </li><li><a href=projects-test.html class="page-link small"><i class="fa fa-coffee"></i>Projects</a>
-                    </li><li><a href=profile-test.html class="page-link small"><i class="fa fa-user"></i>Profile</a>
-                    </li><li><a href="#" id="logout" class="page-link small"><i class="fa fa-sign-out"></i>Logout</a>
+                    <li><a href=\timesheet\timesheets?rand_token= class="page-link small"><i class="fa fa-puzzle-piece"></i>Timesheets</a>
+                    <!--</li><li><a href=\timesheet\project?rand_token= class="page-link small"><i class="fa fa-folder-open"></i>Working Projects</a>
+                    </li><li><a href=\timesheet\project\created_projects?rand_token= class="page-link small"><i class="fa fa-briefcase">
+                    </i>Created Projects</a>
+                    </li><li><a href=\timesheet\project\create_new?rand_token= class="page-link small"><i class="fa fa-plus"></i>New Project</a>-->
+                    </li><li><a href=\timesheet\project?rand_token= class="page-link small"><i class="fa fa-folder-open"></i>Projects</a>
+                    </li><li><a href=\timesheet\profile?rand_token= class="page-link small"><i class="fa fa-user"></i>Profile</a>
+                    </li><li><a href=\timesheet\logout?rand_token= class="page-link small"><i class="fa fa-sign-out"></i>Logout</a>
                     </li>
                 </ul>
             </nav>

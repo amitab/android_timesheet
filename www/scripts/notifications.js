@@ -2,10 +2,6 @@ $(document).ready(function() {
     var path = 'timesheet';
     var notificationList = smartList.createList({element : '#notification-list'});
     var currentOffset = 0;
-    
-    var ua = navigator.userAgent,
-    clickevent = (ua.match(/iPad/i) || ua.match(/iPhone/i) || ua.match(/Android/i)) ? "touchstart" : "click";
-    
     var successHandler = function(data) {
         
         if(data.message.notifications.length == 0) {
@@ -55,7 +51,7 @@ $(document).ready(function() {
             }
             
             var list = '';
-            list += '<li class="notification-link" id="' + value.notificationId +'" url="' + value.url + value.notificationSubjectId + '">';
+            list += '<li class="notification-link" id="' + value.notificationId +'" url="\\' + path + '\\' + value.url + '&id=' + value.notificationSubjectId + '">';
             list += '<div class="content">';
             list += '<div class="content-header">';
             list += '<p class="small"><span class="from">' + value.notificationFromUser + '</span>, <span class="time">'; 
@@ -82,12 +78,12 @@ $(document).ready(function() {
     communicator.serviceObject.invoke({default: true});
     notificationList.emptyListCheck();
     
-    $(document).hammer().on('tap', 'div#load-notitfications', function(e) {
+    $(document).on('click', 'div#load-notitfications', function(e) {
         e.preventDefault();
         communicator.serviceObject.invoke({offset: currentOffset});
     });
     
-    $(document).hammer().on('tap', 'li.notification-link', function(e) {
+    $(document).on('click', 'li.notification-link', function(e) {
         e.preventDefault();
         var url = $(this).attr('url');
         window.location.href = url;

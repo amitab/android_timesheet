@@ -1,0 +1,148 @@
+<!doctype html>
+<!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+<!--[if IE 9]>    <html class="no-js ie9" lang="en"> <![endif]-->
+<!-- Consider adding an manifest.appcache: h5bp.com/d/Offline -->
+<!--[if gt IE 9]><!--> <html class="no-js" lang="en" itemscope itemtype="http://schema.org/Product"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+	<title>TimeSheet</title>
+	<meta name="description" content="" />
+	<meta name="keywords" content="" />
+	<meta name="author" content="">
+
+	<!--<link rel="shortcut icon" href="" type="image/x-icon" />-->
+
+	<!-- Facebook Metadata /-->
+	<meta property="fb:page_id" content="" />
+	<meta property="og:image" content="" />
+	<meta property="og:description" content=""/>
+	<meta property="og:title" content=""/>
+
+	<!-- Google+ Metadata /-->
+	<meta itemprop="name" content="">
+	<meta itemprop="description" content="">
+	<meta itemprop="image" content="">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+	<link rel="stylesheet" href="styles/css/gumby.css">
+    <link rel="stylesheet" href="styles/font-awesome-4.0.3/css/font-awesome.min.css">
+    
+</head>
+
+<body>
+    <script src="scripts/js/libs/jquery-1.10.1.min.js"></script>
+	<script src="scripts/modernizr.custom.js"></script>
+    
+    <!-- Loading custom js files -->    
+    <script src="scripts/jquery.hammer.min.js" ></script>
+    <script src="scripts/native5.core.js"></script>
+    <script src="scripts/smart-list.js"></script>
+    <script src="scripts/sidebar.js" ></script>
+    
+<div id="header" style="height: 68px;">
+        <div class="wrapper">
+            <div class="header-item">
+                
+                <div class="item">
+                    <i class="fa fa-angle-left" id="back"></i>
+                </div>
+                <div class="item logo">
+                    &nbsp;<img src="images/timesheet-logo.png" width="35" alt="">
+                </div>
+                <div class="item title">
+                    <h5>&nbsp;<span id="headertitle">Notifications</span></h5>
+                    <p class="very-small">&nbsp;&nbsp;<span class="headeremail"></span></p>
+                </div>
+            </div>
+            
+           
+        </div>
+    </div>
+    <div id="page-wrap">
+
+    <div class="row">
+        <div class="eight columns centered">
+            <section class="list" id="notification-list">
+                <ul>
+                    
+                    
+                    
+                </ul>
+            </section>
+        </div>
+    </div>
+    
+    <script src="scripts/native5.core.js" ></script>
+    <script src="scripts/native5.notifications.js" ></script>
+    <script src="scripts/smart-list.js" ></script>
+    <script src="scripts/notifications.js" ></script>
+    
+    <script>
+        $(document).ready(function(e) {
+            
+            // LOAD USER DETAILS
+            
+            var user = JSON.parse(localStorage.getItem('user'));
+            
+            // LOAD SIDEBAR
+            
+            $('.headeremail').text(user.email);
+            $('#headername').text(user.first_name + ' ' + user.last_name);
+            $('#headerimage').attr({'src' : user.image});
+            
+            // LOAD COMPLETE
+            
+            var headerHandler = function(data) {
+                $('#header > .wrapper').append(data.message.header_options);
+            };
+            
+            var headerLoader = app.construct({
+                path : 'timesheet',
+                method : 'POST',
+                url : 'headerdata',
+                successHandler : headerHandler
+            });
+            
+            headerLoader.serviceObject.invoke({for: 'notifications'});
+            
+        });
+    </script>
+    
+
+    </div>
+    
+    <div id="sidebar" style="z-index: -2;">
+        <div class="nav-wrapper">
+            <div class="user">
+                <table border="0">
+                    <tr>
+                        <td class="user-image">
+                            <img class="image" src="" alt="" width="100" id="headerimage">
+                        </td>
+                        <td class="user-details">
+                            <h5><span id="headername"></span></h5>
+                            <p class="small"><span class="headeremail"></span></p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <nav class="nav">
+                <ul>
+                    <li><a href=timesheets.html class="page-link small"><i class="fa fa-puzzle-piece"></i>Timesheets</a>
+                    </li><li><a href=projects-test.html class="page-link small"><i class="fa fa-coffee"></i>Projects</a>
+                    </li><li><a href=profile-test.html class="page-link small"><i class="fa fa-user"></i>Profile</a>
+                    </li><li><a href="#" id="logout" class="page-link small"><i class="fa fa-sign-out"></i>Logout</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    
+  </body>
+</html>

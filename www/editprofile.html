@@ -115,12 +115,11 @@
     
     <!-- Loading custom js files -->    
     <script src="scripts/jquery.hammer.min.js" ></script>
-    <script src="scripts/native5.core.js"></script>
-    <script src="scripts/smart-list.js"></script>
     <script src="scripts/sidebar.js" ></script>
+    <script src="scripts/require.js"></script>
     
-<div id="header" style="height: 68px;">
-        <div class="wrapper">
+        <div id="header">
+        <div class="">
             <div class="header-item">
                 
                 <div class="item">
@@ -130,28 +129,37 @@
                     &nbsp;<img src="images/timesheet-logo.png" width="35" alt="">
                 </div>
                 <div class="item title">
-                    <h5>&nbsp;<span id="headertitle">Edit Profile</span></h5>
-                    <p class="very-small">&nbsp;&nbsp;<span class="headeremail"></span></p>
+                    <h5>&nbsp;</h5>
+                    <p class="very-small">&nbsp;&nbsp;</p>
                 </div>
             </div>
             
-           
+                            <div class="header-item trigger" style="height: 68px;">
+                    <h5><i class="fa fa-bars"></i></h5>
+                </div>
+                        
+                            <div class="header-item option" style="height: 68px; position: relative">
+                                                
+                    <a href=\timesheet\notifications?rand_token= >
+                                                <h5><i class="fa fa-globe"></i></h5>
+                    </a>
+                    
+                            </div>
         </div>
     </div>
-    <div id="page-wrap">
-    
+        
+    <div id="page-wrap">    
     <div class="row">
         <div class="six columns centered card">
             <section class="edit-profile">
                 
-                <form action="" method="post" enctype="multipart/form-data" id="edit-profile-form">
+                <form action="" method="post" enctype="multipart/form-data" class="edit-profile-form">
                     <div class="warnings">
-                        
-                    </div>
+                                            </div>
                     
                     
                     <div class="display-picture">
-                        <img src="" alt="" id="profile-image" class="image">
+                        <img src= alt="" class="image">
                     </div>
                     <div class="file" style="text-align: center; margin: 1rem 0;">
                         <input type="file" size="1000" name="user_image" value="">   
@@ -159,127 +167,44 @@
                     
                     
                     <div class="append field">
-                        <input class="input" type="text" placeholder="First Name" name="first_name" id="firstname" value=""/>
+                        <input class="input" type="text" placeholder="First Name" name="first_name" 
+                            value=""
+                        />
                         <span class="adjoined"><i class="fa fa-user"></i></span>
                     </div>
                     <div class="append field">
-                        <input class="input" type="text" placeholder="Last Name" name="last_name" id="lastname" value=""/>
+                        <input class="input" type="text" placeholder="Last Name" name="last_name" 
+                            value=""
+                        />
                         <span class="adjoined"><i class="fa fa-user"></i></span>
                     </div>
                     <div class="field append">
-                        <input class="input first-child" type="text" placeholder="Phone Number" name="phone_number" id="phonenumber"/>
+                        <input class="input first-child" type="text" placeholder="Phone Number" name="phone_number" 
+                            value=""
+                        />
                         <span class="adjoined"><i class="fa fa-phone"></i></span>
                     </div>
                     <div class="field append">
-                        <input class="input first-child" type="text" placeholder="Location" name="location" id="location"/>
+                        <input class="input first-child" type="text" placeholder="Location" name="location" 
+                            value=""
+                        />
                         <span class="adjoined"><i class="fa fa-map-marker"></i></span>
                     </div>
                 </form>
                 <div style="text-align: center; margin-bottom: 10px;">
-                    <div class="medium primary btn"><a href="#" id="save-changes"><i class="fa fa-save"></i>&nbsp;Save Changes</a></div>
+                    <div class="medium primary btn"><a href="#" id="submit"><i class="fa fa-save"></i>&nbsp;Save Changes</a></div>
                 </div> 
                          
             </section>
         </div>
     </div>
-    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+    
     <script>
-        $(document).ready(function() {			
-            
-            // LOAD USER DETAILS
-            
-            var user = JSON.parse(localStorage.getItem('user'));
-            
-            // LOAD SIDEBAR
-            
-            $('.headeremail').text(user.email);
-            $('#headername').text(user.first_name + ' ' + user.last_name);
-            $('#headerimage').attr({'src' : user.image});
-            $('#profile-image').attr({'src' : user.image});
-            
-            // LOAD COMPLETE
-            
-            $.fn.serializeObject = function() {
-                var o = {};
-                var a = this.serializeArray();
-                $.each(a, function() {
-                    if (o[this.name] !== undefined) {
-                        if (!o[this.name].push) {
-                            o[this.name] = [o[this.name]];
-                        }
-                        o[this.name].push(this.value || '');
-                    } else {
-                        o[this.name] = this.value || '';
-                    }
-                });
-                return o;
-            };
-            
-            var headerHandler = function(data) {
-                $('#header > .wrapper').append(data.message.header_options);
-            };
-            
-            var headerLoader = app.construct({
-                path : 'timesheet',
-                method : 'POST',
-                url : 'headerdata',
-                successHandler : headerHandler
-            });
-            
-            headerLoader.serviceObject.invoke({for: 'profile/edit_profile'});
-            
-            function onPhotoDataSuccess(imageData) {
-                // Uncomment to view the base64-encoded image data
-                console.log(imageData);
-                
-                var smallImage = document.getElementById('profile-image');
-                smallImage.src = "data:image/jpeg;base64," + imageData;
-            }
-            
-            function onFail(message) {
-                alert('Failed because: ' + message);
-            }
-            
-            $(document).hammer().on('tap', '#profile-image', function(e) {
-                
-                navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 20,
-                    destinationType: Camera.DestinationType.DATA_URL,
-                    sourceType: Camera.PictureSourceType.PHOTOLIBRARY
-                });
-                
-            });
-            
-            var successHandler = function(data) {
-                //console.log(data);
-                if(data.message.success == false) {
-                    
-                    
-                    
-                } else if (data.message.success == true) {
-                
-                    
-                
-                } else {
-                    
-                    
-                    
-                }
-            };
-            
-            var communicator = app.construct({
-                path : 'timesheet',
-                method : 'POST',
-                url : 'profile/edit_profile_data',
-                successHandler : successHandler
-            });
-            
-            // Fetch initial data
-            communicator.serviceObject.invoke();
-            
-            $(document).hammer().on('tap', '#save-changes', function(e) {
+        $(document).ready(function() {
+            $(document).on('click', '#submit', function(e) {
                 e.preventDefault();
-                var userData = $('form#edit-profile-form').serializeObject();
-                userData.edit = true;
+                $('form').append('<input type="hidden" name="edit" value="1" />');
+                $('form').submit();
             });
         });
     </script>
@@ -293,21 +218,25 @@
                 <table border="0">
                     <tr>
                         <td class="user-image">
-                            <img class="image" src="" alt="" width="100" id="headerimage">
+                            <img class="image" src="" alt="" width="100">
                         </td>
                         <td class="user-details">
-                            <h5><span id="headername"></span></h5>
-                            <p class="small"><span class="headeremail"></span></p>
+                            <h5></h5>
+                            <p class="small"></p>
                         </td>
                     </tr>
                 </table>
             </div>
             <nav class="nav">
                 <ul>
-                    <li><a href=timesheets.html class="page-link small"><i class="fa fa-puzzle-piece"></i>Timesheets</a>
-                    </li><li><a href=projects-test.html class="page-link small"><i class="fa fa-coffee"></i>Projects</a>
-                    </li><li><a href=profile-test.html class="page-link small"><i class="fa fa-user"></i>Profile</a>
-                    </li><li><a href="#" id="logout" class="page-link small"><i class="fa fa-sign-out"></i>Logout</a>
+                    <li><a href=\timesheet\timesheets?rand_token= class="page-link small"><i class="fa fa-puzzle-piece"></i>Timesheets</a>
+                    <!--</li><li><a href=\timesheet\project?rand_token= class="page-link small"><i class="fa fa-folder-open"></i>Working Projects</a>
+                    </li><li><a href=\timesheet\project\created_projects?rand_token= class="page-link small"><i class="fa fa-briefcase">
+                    </i>Created Projects</a>
+                    </li><li><a href=\timesheet\project\create_new?rand_token= class="page-link small"><i class="fa fa-plus"></i>New Project</a>-->
+                    </li><li><a href=\timesheet\project?rand_token= class="page-link small"><i class="fa fa-folder-open"></i>Projects</a>
+                    </li><li><a href=\timesheet\profile?rand_token= class="page-link small"><i class="fa fa-user"></i>Profile</a>
+                    </li><li><a href=\timesheet\logout?rand_token= class="page-link small"><i class="fa fa-sign-out"></i>Logout</a>
                     </li>
                 </ul>
             </nav>

@@ -8,34 +8,6 @@ $(document).ready(function(){
     var pauseTime = 0;
     var workTime = 0;
     var seconds = 0;
-            
-    // LOAD USER DETAILS
-    
-    var user = JSON.parse(localStorage.getItem('user'));
-    
-    // LOAD SIDEBAR
-    
-    $('.headeremail').text(user.email);
-    $('#headername').text(user.first_name + ' ' + user.last_name);
-    $('#headerimage').attr({'src' : user.image});
-    
-    // LOAD COMPLETE
-    
-    var headerHandler = function(data) {
-        $('#header > .wrapper').append(data.message.header_options);
-    };
-    
-    var headerLoader = app.construct({
-        path : 'timesheet',
-        method : 'POST',
-        url : 'headerdata',
-        successHandler : headerHandler
-    });
-    
-    headerLoader.serviceObject.invoke({for: 'timer'});
-    
-    var ua = navigator.userAgent,
-    clickevent = (ua.match(/iPad/i) || ua.match(/iPhone/i) || ua.match(/Android/i)) ? "touchstart" : "click";
     
     function minuteUp() {
         var minute = parseInt($('#minute').text());
@@ -98,21 +70,6 @@ $(document).ready(function(){
         clearInterval(interval);
     }
     
-    function getJsonFromUrl() {
-        var query = location.search.substr(1);
-        var data = query.split("&");
-        var result = {};
-        for(var i=0; i<data.length; i++) {
-            var item = data[i].split("=");
-            result[item[0]] = item[1];
-        }
-        return result;
-    }
-    
-    var result = getJsonFromUrl();
-    var projectId = result['id'];
-    $('#project_id').val(projectId); // Insert project id to form
-    
     function finish() {
         var minute = parseInt($('#minute').text());
         var hour = parseInt($('#hour').text());
@@ -121,14 +78,11 @@ $(document).ready(function(){
         $('input#work_time').val(time);
         $('input#start_time').val(startTime.getFullYear() + '-' + startTime.getDate() + '-' + startTime.getMonth() + ' ' + startTime.getHours() + ':' + startTime.getMinutes() + ':' + startTime.getSeconds());
         $('input#end_time').val(endTime.getFullYear() + '-' + endTime.getDate() + '-' + endTime.getMonth() + ' ' + endTime.getHours() + ':' + endTime.getMinutes() + ':' + endTime.getSeconds());
-        
-        var formData = $('form#timer').serialize();
-        var url = 'newtask.html?' + formData;
-        window.location.href = url;
-        
+        $('form').append('<input type="hidden" name="from_timer_page" value="1" />');
+        $('form').submit();
     }
     
-    $(document).on(clickevent, '#start-button', function(e) {
+    $('#start-button').click(function(e) {
         if($(this).hasClass('stopped')) {
             startClock();
             $(this).removeClass('stopped').addClass('started');
@@ -153,7 +107,7 @@ $(document).ready(function(){
         e.preventDefault();
     });
     
-    $(document).on(clickevent, '#pause-button', function(e) {
+    $('#pause-button').click(function(e) {
         if($(this).parent().hasClass('disabled')) {
             e.preventDefault();
             return false;
@@ -173,10 +127,6 @@ $(document).ready(function(){
         }
     });
     
-    $(document).hammer().on('tap', '#add-task', function(e) {
-        e.preventDefault();
-        var url = '/' + app.returnPath() + '/timesheets/new_task?rand_token=' + result['rand_token'] + '&project_id=' + projectId;
-        window.location.href = url;
-    });
+    
     
 });

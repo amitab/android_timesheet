@@ -115,13 +115,11 @@
     
     <!-- Loading custom js files -->    
     <script src="scripts/jquery.hammer.min.js" ></script>
-    <script src="scripts/native5.core.js"></script>
-    <script src="scripts/native5.notifications.js"></script>
-    <script src="scripts/smart-list.js"></script>
     <script src="scripts/sidebar.js" ></script>
+    <script src="scripts/require.js"></script>
     
-<div id="header" style="height: 68px;">
-        <div class="wrapper">
+        <div id="header">
+        <div class="">
             <div class="header-item">
                 
                 <div class="item">
@@ -131,44 +129,46 @@
                     &nbsp;<img src="images/timesheet-logo.png" width="35" alt="">
                 </div>
                 <div class="item title">
-                    <h5>&nbsp;<span id="headertitle">Details</span></h5>
-                    <p class="very-small">&nbsp;&nbsp;<span class="headeremail"></span></p>
+                    <h5>&nbsp;</h5>
+                    <p class="very-small">&nbsp;&nbsp;</p>
                 </div>
             </div>
             
-           
+                            <div class="header-item trigger" style="height: 68px;">
+                    <h5><i class="fa fa-bars"></i></h5>
+                </div>
+                        
+                            <div class="header-item option" style="height: 68px; position: relative">
+                                                
+                    <a href=\timesheet\notifications?rand_token= >
+                                                <h5><i class="fa fa-globe"></i></h5>
+                    </a>
+                    
+                            </div>
         </div>
     </div>
+        
     <div id="page-wrap">
-
     <div class="row">
         <div class="eight columns centered">
+            <div class="messages">
+                            </div>
             <section class="project-details">
                 <div class="title">
-                    <h5><span id="projectname"></span></h5>
+                    <h5></h5>
                 </div>
                 <div class="wrapper">
-                <div class="messages">
-                </div>
                     <div class="overview" style="margin-bottom: 10px;">
                         
                         <table>
                             <tbody>
                                 <tr>
                                     <td>Total Time</td>
-                                    <td><span id="totaltime"></span> hours</td>
+                                    <td> hours</td>
                                 </tr>
-                                    <tr>
-                                        <td>Total Salary</td>
-                                        <td><span id="totalsalary"></span>$</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Pause Time</td>
-                                        <td><span id="pausetime"></span> hours</td>
-                                    </tr>
-                                <tr>
+                                                                <tr>
                                     <td>Expenses</td>
-                                    <td><spn id="expenses"></spn>$</td>
+                                    <td>$</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -180,30 +180,30 @@
                                 <tr>
                                     <td>Employer</td>
                                     <td>
-                                    <a id="employer" href="">
-                                    <span id="employername"></span></a></td>
+                                    <a href=\timesheet\profile\view?rand_token=&amp;id=>
+                                    </a></td>
                                 </tr>
                                 <tr>
                                     <td>Created</td>
-                                    <td><span id="createddate"></span></td>
+                                    <td></td>
                                 </tr>
                                 <tr>
                                     <td>Deadline</td>
-                                    <td><span id="deadline"></span></td>
+                                    <td></td>
                                 </tr>
                                 <tr>
                                     <td>Salary/hr</td>
-                                    <td><span id="salary"></span>$</td>
+                                    <td>$</td>
                                 </tr>
                                 <tr>
                                     <td>Status</td>
-                                    <td><span id="state"></span></td>
+                                    <td></td>
                                 </tr>
                             </tbody>
                         </table>
                         <div class="description">
                             <h6>Description</h6>
-                            <p style="font-size: 14px; padding: 0 6px;"><span id="description"></span></p>
+                            <p style="font-size: 14px; padding: 0 6px;"></p>
                         </div>
                     </div>
                 </div>
@@ -215,116 +215,13 @@
     <div id="edit-inline-menu" class="inline-menu hidden">
         <ul>
             
+            <li><a href=\timesheet\project\team_list?rand_token=&amp;id= >View Team</a></li>
+            
+                        
+                        
+            <li><a href=\timesheet\project?rand_token= >Projects</a></li>
         </ul>
     </div>
-    
-    <script>
-        $(document).ready(function (e) {
-            
-            // LOAD USER DETAILS
-            
-            var user = JSON.parse(localStorage.getItem('user'));
-            
-            // LOAD SIDEBAR
-            
-            $('.headeremail').text(user.email);
-            $('#headername').text(user.first_name + ' ' + user.last_name);
-            $('#headerimage').attr({'src' : user.image});
-            
-            // LOAD COMPLETE
-            
-            function getJsonFromUrl() {
-                var query = location.search.substr(1);
-                var data = query.split("&");
-                var result = {};
-                for(var i=0; i<data.length; i++) {
-                    var item = data[i].split("=");
-                    result[item[0]] = item[1];
-                }
-                return result;
-            }
-            
-            var params = getJsonFromUrl();
-            var projectId = params['id'];
-            
-            var headerHandler = function(data) {
-                $('#header > .wrapper').append(data.message.header_options);
-            };
-            
-            var headerLoader = app.construct({
-                path : 'timesheet',
-                method : 'POST',
-                url : 'headerdata',
-                successHandler : headerHandler
-            });
-            
-            headerLoader.serviceObject.invoke({for: 'project/details', project_id: projectId});
-            
-            var successHandler = function(data) {
-                console.log(data);
-                $('#edit-inline-menu > ul').append(data.message.inlinemenu);
-                
-                $('#projectname').text(data.message.project_details.projectName);
-                $('#totaltime').text(data.message.total_time);
-                $('#totalsalary').text(data.message.total_salary);
-                $('#pausetime').text(data.message.pause_time);
-                $('#expenses').text(data.message.expenses);
-                $('#employername').text(data.message.employer_name);
-                $('#createddate').text(data.message.project_details.prettyCreatedDate);
-                $('#deadline').text(data.message.project_details.prettyDeadline);
-                $('#salary').text(data.message.project_details.projectSalary);
-                $('#state').text(data.message.project_details.readableProjectState);
-                $('#description').text(data.message.project_details.projectDescription);
-                $('a#employer').attr({'href' : 'viewprofile.html?id=' + data.message.manager_id});
-                
-            };
-            
-            var communicator = app.construct({
-                path : 'timesheet',
-                method : 'POST',
-                url : 'project/details_data',
-                successHandler : successHandler
-            });
-            
-            communicator.serviceObject.invoke({id: projectId});
-            
-            $(document).hammer().on('tap', '#marker', function(e) {
-                e.preventDefault();
-                var url = $(this).attr('url');
-                
-                var completer = app.construct({
-	            	path: '',
-	            	method : 'POST',
-	            	url: url,
-	            	successHandler: function(data) {
-	            		if(data.message.success == true) {
-	            			native5.Notifications.show( "Project is marked complete.", {
-				                notificationType:'toast',
-				                title:'Success',
-				                position:'bottom',
-				                distance:'0px',
-				                timeout: 5000,
-				                persistent:false
-				            });
-	            		} else if (data.message.success == false) {
-	            			native5.Notifications.show( "An error occured.", {
-				                notificationType:'toast',
-				                title:'Error',
-				                position:'bottom',
-				                distance:'0px',
-				                timeout: 5000,
-				                persistent:false
-				            });
-	            		}
-	            	}
-	            });
-	            
-	            completer.serviceObject.invoke({id: projectId});
-	             
-            });
-            
-        });
-    </script>
     
 
     </div>
@@ -335,21 +232,25 @@
                 <table border="0">
                     <tr>
                         <td class="user-image">
-                            <img class="image" src="" alt="" width="100" id="headerimage">
+                            <img class="image" src="" alt="" width="100">
                         </td>
                         <td class="user-details">
-                            <h5><span id="headername"></span></h5>
-                            <p class="small"><span class="headeremail"></span></p>
+                            <h5></h5>
+                            <p class="small"></p>
                         </td>
                     </tr>
                 </table>
             </div>
             <nav class="nav">
                 <ul>
-                    <li><a href=timesheets.html class="page-link small"><i class="fa fa-puzzle-piece"></i>Timesheets</a>
-                    </li><li><a href=projects-test.html class="page-link small"><i class="fa fa-coffee"></i>Projects</a>
-                    </li><li><a href=profile-test.html class="page-link small"><i class="fa fa-user"></i>Profile</a>
-                    </li><li><a href="#" id="logout" class="page-link small"><i class="fa fa-sign-out"></i>Logout</a>
+                    <li><a href=\timesheet\timesheets?rand_token= class="page-link small"><i class="fa fa-puzzle-piece"></i>Timesheets</a>
+                    <!--</li><li><a href=\timesheet\project?rand_token= class="page-link small"><i class="fa fa-folder-open"></i>Working Projects</a>
+                    </li><li><a href=\timesheet\project\created_projects?rand_token= class="page-link small"><i class="fa fa-briefcase">
+                    </i>Created Projects</a>
+                    </li><li><a href=\timesheet\project\create_new?rand_token= class="page-link small"><i class="fa fa-plus"></i>New Project</a>-->
+                    </li><li><a href=\timesheet\project?rand_token= class="page-link small"><i class="fa fa-folder-open"></i>Projects</a>
+                    </li><li><a href=\timesheet\profile?rand_token= class="page-link small"><i class="fa fa-user"></i>Profile</a>
+                    </li><li><a href=\timesheet\logout?rand_token= class="page-link small"><i class="fa fa-sign-out"></i>Logout</a>
                     </li>
                 </ul>
             </nav>

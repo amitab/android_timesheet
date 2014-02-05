@@ -36,34 +36,18 @@
 </head>
 
 <body>
+    <input type="hidden" id="page" value="timesheets/details">
     <script src="scripts/js/libs/jquery-1.10.1.min.js"></script>
 	<script src="scripts/modernizr.custom.js"></script>
     
     <!-- Loading custom js files -->    
     <script src="scripts/jquery.hammer.min.js" ></script>
+    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
     <script src="scripts/native5.core.js"></script>
     <script src="scripts/smart-list.js"></script>
     <script src="scripts/sidebar.js" ></script>
     
-<div id="header" style="height: 68px;">
-        <div class="wrapper">
-            <div class="header-item">
-                
-                <div class="item">
-                    <i class="fa fa-angle-left" id="back"></i>
-                </div>
-                <div class="item logo">
-                    &nbsp;<img src="images/timesheet-logo.png" width="35" alt="">
-                </div>
-                <div class="item title">
-                    <h5>&nbsp;<span id="headertitle">Details</span></h5>
-                    <p class="very-small">&nbsp;&nbsp;<span class="headeremail"></span></p>
-                </div>
-            </div>
-            
-           
-        </div>
-    </div>
+
     <div id="page-wrap">
     
     <div class="row">
@@ -160,7 +144,7 @@
                 window.location.href = $('input#add-task-url').attr('task-details-path') + '?old_timesheet_id=' + $('input#timesheet_id').attr('value') + '&project_id=' + $('input#project_id').attr('value');
             });
             
-            var headerHandler = function(data) {
+            /*var headerHandler = function(data) {
                 $('#header > .wrapper').append(data.message.header_options);
             };
             
@@ -171,7 +155,7 @@
                 successHandler : headerHandler
             });
             
-            headerLoader.serviceObject.invoke({for: 'timesheets/details', timesheet_id: id});
+            headerLoader.serviceObject.invoke({for: 'timesheets/details', timesheet_id: id});*/
             
         });
     </script>

@@ -37,34 +37,17 @@
 
 <body>
 	
-	</script>-->
+    <input type="hidden" id="page" value="project/add_users">
     <script src="scripts/js/libs/jquery-1.10.1.min.js"></script>
 	<script src="scripts/modernizr.custom.js"></script>
  
     <script src="scripts/jquery.hammer.min.js" ></script>
+    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
     <script src="scripts/native5.core.js"></script>
     <script src="scripts/smart-list.js"></script>
     <script src="scripts/sidebar.js" ></script>
     
-<div id="header" style="height: 68px;">
-        <div class="wrapper">
-            <div class="header-item">
-                
-                <div class="item">
-                    <i class="fa fa-angle-left" id="back"></i>
-                </div>
-                <div class="item logo">
-                    &nbsp;<img src="images/timesheet-logo.png" width="35" alt="">
-                </div>
-                <div class="item title">
-                    <h5>&nbsp;<span id="headertitle">Add Users</span></h5>
-                    <p class="very-small">&nbsp;&nbsp;<span class="headeremail"></span></p>
-                </div>
-            </div>
-            
-           
-        </div>
-    </div>
+
     <div id="page-wrap">
     
     <!--    Must set value of checkboxes to the userids -->
@@ -114,7 +97,7 @@
             
             // LOAD COMPLETE
             
-            var headerHandler = function(data) {
+            /*var headerHandler = function(data) {
                 $('#header > .wrapper').append(data.message.header_options);
             };
             
@@ -125,7 +108,7 @@
                 successHandler : headerHandler
             });
             
-            headerLoader.serviceObject.invoke({for: 'project/add_users'});
+            headerLoader.serviceObject.invoke({for: 'project/add_users'});*/
         });
     </script>
     

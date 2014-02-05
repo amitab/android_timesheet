@@ -1,4 +1,196 @@
 
+    
+document.addEventListener('deviceready', function() {
+    
+    function urlData() {
+        var query = location.search.substr(1);
+        var data = query.split("&");
+        var result = {};
+        for(var i=0; i<data.length; i++) {
+            var item = data[i].split("=");
+            result[item[0]] = item[1];
+        }
+        return result;
+    }
+    
+    var params = urlData();
+    console.log(params);
+    var dataId = params['id'];
+    
+    var animation = false;
+    // HEADER
+    
+    function menuIcon() {
+        if($('.trigger').children('h5').children('i').hasClass('fa-bars'))
+            $('.trigger').children('h5').children('i').removeClass('fa-bars').addClass('fa-times');
+        else
+            $('.trigger').children('h5').children('i').removeClass('fa-times').addClass('fa-bars');
+    }
+    
+    
+    function closeMenu(){
+        menuIcon();
+        $('#page-wrap').removeClass('active');
+        $('#sidebar').removeClass('active');
+        setTimeout(function(){ $('#sidebar').css('z-index','-100'); animation = false; },350);
+    }
+    
+    function openMenu(){
+        menuIcon();
+        $('#sidebar').css('z-index','100');
+        $('#page-wrap').addClass('active');
+        $('#sidebar').addClass('active');
+        setTimeout(function(){ animation = false; },350);
+    }
+    
+    var notification = false;
+    var search = false;
+    var refresh = false;
+    var edit = false;
+    var inline_menu = false;
+    var form_save = false;
+    var add_task = false;
+    var count = 0;
+    
+    var menu = [];
+    
+    var headerHandler = function(data) {
+        if(data.message.header_menu.search == true) {
+            search = true;
+            menu.push({
+                icon: 'img/search.png',
+                text: 'Search',
+                click: function() {
+                    alert('Search');
+                }
+            });
+            count++;
+        }
+        if(data.message.header_menu.refresh == true) {
+            refresh = true;
+            menu.push({
+                icon: 'img/refresh.png',
+                text: 'Refresh',
+                click: function() {
+                    alert('Refresh');
+                }
+            });
+            count++;
+        }
+        if(data.message.header_menu.edit == true) {
+            edit = true;
+            menu.push({
+                icon: 'img/edit.png',
+                text: 'Edit',
+                click: function() {
+                    alert('Edit');
+                }
+            });
+            count++;
+        }
+        if(data.message.header_menu.inline_menu == true) {
+            inline_menu = true;
+            menu.push({
+                icon: 'img/inline.png',
+                text: 'Options',
+                click: function() {
+                    alert('Inline menu');
+                }
+            });
+            count++;
+        }
+        if(data.message.header_menu.form_save == true) {
+            form_save = true;
+            menu.push({
+                icon: 'img/save.png',
+                text: 'Save',
+                click: function() {
+                    alert('Save');
+                }
+            });
+            count++;
+        }
+        if(data.message.header_menu.add_task == true) {
+            add_task = true;
+            menu.push({
+                icon: 'img/add.png',
+                text: 'Add Task',
+                click: function() {
+                    alert('Add');
+                }
+            });
+            count++;
+        } else if(data.message.header_menu.notification == true) {
+            notification = true;
+            menu.push({
+                icon: 'img/noti.png',
+                text: 'Notifications',
+                click: function() {
+                    window.location.href = "notifications.html";
+                }
+            });
+            count++;
+        }
+        
+        if(count < 2) {
+            menu.push({
+                icon: 'img/menu-icon.png',
+                text: 'Menu',
+                click: function() {
+                    if(!animation && Modernizr.csstransforms3d) {
+                        animation = true;
+                        if($('#page-wrap').hasClass('active')) {
+                            closeMenu();
+                        }
+                        else openMenu();
+                    } 
+                }
+            });
+        }
+        
+        window.plugins.navBar.setLogo('images/timesheet-logo.png');
+        window.plugins.navBar.setIcon('images/timesheet-logo.png');
+        window.plugins.navBar.setTitle('TITLE');
+        window.plugins.navBar.setMenu(menu);
+        window.plugins.navBar.setDisplayHomeAsUpEnabled("true");
+        window.plugins.navBar.setDisplayShowHomeEnabled("true");
+        window.plugins.navBar.show();
+        
+    };
+    
+    var headerLoader = app.construct({
+        path : 'timesheet',
+        method : 'POST',
+        url : 'headerdata',
+        successHandler : headerHandler
+    });
+    
+    headerLoader.serviceObject.invoke({for: $('input#page').val(), id: dataId });
+    
+    /*window.plugins.navBar.setLogo('images/timesheet-logo.png');
+    window.plugins.navBar.setIcon('images/timesheet-logo.png');
+    window.plugins.navBar.setTitle('');
+    window.plugins.navBar.setMenu([
+    {
+        icon: 'img/menu-icon.png',
+        text: 'Home',
+        click: function() {
+            if(!animation && Modernizr.csstransforms3d) {
+                animation = true;
+                if($('#page-wrap').hasClass('active')) {
+                    closeMenu();
+                }
+                else openMenu();
+            } 
+        }
+    }
+    ]);
+    window.plugins.navBar.setMenu(menu);
+    window.plugins.navBar.setDisplayHomeAsUpEnabled("true");
+    window.plugins.navBar.setDisplayShowHomeEnabled("true");
+    window.plugins.navBar.show();*/
+    
+});
 
 $(document).ready(function(){
     
@@ -29,35 +221,6 @@ $(document).ready(function(){
         $('#sidebar').addClass('active');
         setTimeout(function(){ animation = false; },350);
     }
-    
-    document.addEventListener('deviceready', function() {
-            
-    // HEADER
-    
-    window.plugins.navBar.setLogo('images/timesheet-logo.png');
-    window.plugins.navBar.setIcon('images/timesheet-logo.png');
-    window.plugins.navBar.setTitle('');
-    window.plugins.navBar.setMenu([
-    {
-        icon: 'img/menu-icon.png',
-        text: 'Home',
-        click: function() {
-            alert('FIRE');
-            if(!animation && Modernizr.csstransforms3d) {
-                animation = true;
-                if($('#page-wrap').hasClass('active')) {
-                    closeMenu();
-                }
-                else openMenu();
-            } 
-        }
-    }
-    ]);
-    window.plugins.navBar.setDisplayHomeAsUpEnabled("true");
-    window.plugins.navBar.setDisplayShowHomeEnabled("true");
-    window.plugins.navBar.show();
-    
-});
     
     function openInlineMenu(inlineMenu) {
         animation = true;

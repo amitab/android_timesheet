@@ -21,7 +21,7 @@ $(document).ready(function(){
     
     // LOAD COMPLETE
     
-    var headerHandler = function(data) {
+    /*var headerHandler = function(data) {
         $('#header > .wrapper').append(data.message.header_options);
     };
     
@@ -32,7 +32,7 @@ $(document).ready(function(){
         successHandler : headerHandler
     });
     
-    headerLoader.serviceObject.invoke({for: 'timer'});
+    headerLoader.serviceObject.invoke({for: 'timer'});*/
     
     var ua = navigator.userAgent,
     clickevent = (ua.match(/iPad/i) || ua.match(/iPhone/i) || ua.match(/Android/i)) ? "touchstart" : "click";

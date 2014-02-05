@@ -1,0 +1,336 @@
+<!doctype html>
+<!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+<!--[if IE 9]>    <html class="no-js ie9" lang="en"> <![endif]-->
+<!-- Consider adding an manifest.appcache: h5bp.com/d/Offline -->
+<!--[if gt IE 9]><!--> <html class="no-js" lang="en" itemscope itemtype="http://schema.org/Product"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+	<title>TimeSheet</title>
+	<meta name="description" content="" />
+	<meta name="keywords" content="" />
+	<meta name="author" content="">
+
+	<!--<link rel="shortcut icon" href="" type="image/x-icon" />-->
+
+	<!-- Facebook Metadata /-->
+	<meta property="fb:page_id" content="" />
+	<meta property="og:image" content="" />
+	<meta property="og:description" content=""/>
+	<meta property="og:title" content=""/>
+
+	<!-- Google+ Metadata /-->
+	<meta itemprop="name" content="">
+	<meta itemprop="description" content="">
+	<meta itemprop="image" content="">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+	<link rel="stylesheet" href="styles/css/gumby.css">
+    <link rel="stylesheet" href="styles/font-awesome-4.0.3/css/font-awesome.min.css">
+    
+</head>
+
+<body>
+    
+	<!-- Grab Google CDN's jQuery, fall back to local if offline -->
+	<!-- 2.0 for modern browsers, 1.10 for .oldie -->
+	<!--<script>
+	var oldieCheck = Boolean(document.getElementsByTagName('html')[0].className.match(/\soldie\s/g));
+	if(!oldieCheck) {
+	document.write('<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"><\/script>');
+	} else {
+	document.write('<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"><\/script>');
+	}
+	</script>
+	<script>
+	if(!window.jQuery) {
+	if(!oldieCheck) {
+	  document.write('<script src=""scripts/js/libs/jquery-2.0.2.min.js""><\/script>');
+	} else {
+	  document.write('<script src=""scripts/js/libs/jquery-1.10.1.min.js""><\/script>');
+	}
+	}
+	</script>-->
+    <script src="scripts/js/libs/jquery-1.10.1.min.js"></script>
+	<script src="scripts/modernizr.custom.js"></script>
+	<!--
+	Include gumby.js followed by UI modules followed by gumby.init.js
+	Or concatenate and minify into a single file -->
+	<script gumby-touch="http:///timesheet/js/libs" src="scripts/js/libs/gumby.js"></script>
+	<script src="scripts/js/libs/ui/gumby.retina.js"></script>
+	<script src="scripts/js/libs/ui/gumby.fixed.js"></script>
+	<script src="scripts/js/libs/ui/gumby.skiplink.js"></script>
+	<script src="scripts/js/libs/ui/gumby.toggleswitch.js"></script>
+	<script src="scripts/js/libs/ui/gumby.checkbox.js"></script>
+	<script src="scripts/js/libs/ui/gumby.radiobtn.js"></script>
+	<script src="scripts/js/libs/ui/gumby.tabs.js"></script>
+	<script src="scripts/js/libs/ui/gumby.navbar.js"></script>
+	<script src="scripts/js/libs/ui/jquery.validation.js"></script>
+	<script src="scripts/js/libs/gumby.init.js"></script>
+
+	<!--
+	Google's recommended deferred loading of JS
+	gumby.min.js contains gumby.js, all UI modules and gumby.init.js
+
+	Note: If you opt to use this method of defered loading,
+	ensure that any javascript essential to the initial
+	display of the page is included separately in a normal
+	script tag.
+
+	<script type="text/javascript">
+	function downloadJSAtOnload() {
+	var element = document.createElement("script");
+	element.src = "js/libs/gumby.min.js";
+	document.body.appendChild(element);
+	}
+	if (window.addEventListener)
+	window.addEventListener("load", downloadJSAtOnload, false);
+	else if (window.attachEvent)
+	window.attachEvent("onload", downloadJSAtOnload);
+	else window.onload = downloadJSAtOnload;
+	</script> -->
+
+	<!--<script src="scripts/js/plugins.js"></script>
+	<script src="scripts/js/main.js"></script>-->
+
+	<!-- Change UA-XXXXX-X to be your site's ID -->
+	<!--<script>
+	window._gaq = [['_setAccount','UAXXXXXXXX1'],['_trackPageview'],['_trackPageLoadTime']];
+	Modernizr.load({
+	  load: ('https:' == location.protocol ? '//ssl' : '//www') + '.google-analytics.com/ga.js'
+	});
+	</script>-->
+
+	<!-- Prompt IE 6 users to install Chrome Frame. Remove this if you want to support IE 6.
+	   chromium.org/developers/how-tos/chrome-frame-getting-started -->
+	<!--[if lt IE 7 ]>
+	<script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
+	<script>window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>
+	<![endif]-->
+    
+    <!-- Loading custom js files -->    
+    <script src="scripts/jquery.hammer.min.js" ></script>
+    <script src="scripts/native5.core.js"></script>
+    <script src="scripts/native5.notifications.js"></script>
+    <script src="scripts/smart-list.js"></script>
+    <script src="scripts/sidebar.js" ></script>
+    
+<div id="header" style="height: 68px;">
+        <div class="wrapper">
+            <div class="header-item">
+                
+                <div class="item">
+                    <i class="fa fa-angle-left" id="back"></i>
+                </div>
+                <div class="item logo">
+                    &nbsp;<img src="images/timesheet-logo.png" width="35" alt="">
+                </div>
+                <div class="item title">
+                    <h5>&nbsp;<span id="headertitle"></span></h5>
+                    <p class="very-small">&nbsp;&nbsp;<span class="headeremail"></span></p>
+                </div>
+            </div>
+            
+           
+        </div>
+    </div>
+    <div id="page-wrap">
+    
+    <div class="row">
+        <div class="eight columns centered">
+            <section class="new-project">
+                
+                <form action="" method="post" class="project-form">
+                    <input type="hidden" id="project_id" name="project_id" />
+                    <div class="warnings">
+                    </div>
+                    <div class="append field">
+                        <input class="input" type="text" placeholder="Project Name" name="project_name" id="projectname"/>
+                        <span class="adjoined"><i class="fa fa-file"></i></span>
+                    </div>
+                    <div class="field">
+                        <label class="medium" for="end_date"><i class="fa fa-clock-o"></i>&nbsp;Deadline : </label>
+                        <input name="deadline" type="datetime-local" id="deadline">
+                    </div>
+                    <div class="append field">
+                        <input class="input" type="text" placeholder="Salary" name="salary"  id="salary"/>
+                        <span class="adjoined"><i class="fa fa-money"></i></span>
+                    </div>
+                    <div class="field">
+                        <textarea class="input textarea" placeholder="Description" name="description" id="description"></textarea>
+                    </div>
+                </form>
+                
+            </section>
+        </div>
+    </div>
+    
+    <script>
+        $(document).ready(function() {
+            
+            // LOAD USER DETAILS
+            
+            var user = JSON.parse(localStorage.getItem('user'));
+            
+            // LOAD SIDEBAR
+            
+            $('.headeremail').text(user.email);
+            $('#headername').text(user.first_name + ' ' + user.last_name);
+            $('#headerimage').attr({'src' : user.image});
+            
+            // LOAD COMPLETE
+            
+            $.fn.serializeObject = function() {
+                var o = {};
+                var a = this.serializeArray();
+                $.each(a, function() {
+                    if (o[this.name] !== undefined) {
+                        if (!o[this.name].push) {
+                            o[this.name] = [o[this.name]];
+                        }
+                        o[this.name].push(this.value || '');
+                    } else {
+                        o[this.name] = this.value || '';
+                    }
+                });
+                return o;
+            };
+                        
+            function getJsonFromUrl() {
+                var query = location.search.substr(1);
+                var data = query.split("&");
+                var result = {};
+                for(var i=0; i<data.length; i++) {
+                    var item = data[i].split("=");
+                    result[item[0]] = item[1];
+                }
+                return result;
+            }
+            
+            var successHandler = function(data) {
+            var showMessage;
+            if(id == 0) showMessage = "Project successfuly created.";
+            else showMessage = "Project successfuly edited.";
+                
+                if(data.message.success == true) {
+                    native5.Notifications.show( showMessage, {
+                        notificationType:'toast',
+                        title:'Success',
+                        position:'bottom',
+                        distance:'0px',
+                        timeout: 5000,
+                        persistent:false
+                    });
+                    
+                    window.location.href = "projectdetails.html?id=" + data.message.project_id;
+                    
+                } else if(data.message.success == false) {
+                    native5.Notifications.show( "Failed.", {
+                        notificationType:'toast',
+                        title:'Error',
+                        position:'bottom',
+                        distance:'0px',
+                        timeout: 5000,
+                        persistent:false
+                    });
+                    
+                    pressed = false;
+                    
+                } else {
+                    $('#projectname').val(data.message.project.projectName);
+                    $('#deadline').val(data.message.project.projectTimeAlloted);
+                    $('#salary').val(data.message.project.projectSalary);
+                    $('#description').text(data.message.project.projectDescription);
+                }
+                
+            };
+            
+            var communicator = app.construct({
+                path : 'timesheet',
+                method : 'POST',
+                url : 'project/create_new_data',
+                successHandler : successHandler
+            });
+            
+            var result = getJsonFromUrl();
+            var id = result['id'];
+            if(typeof id === 'undefined') {
+                id = 0;
+                $('#headertitle').text('New Project');
+                // its a new project
+            } else {
+                $('#project_id').val(id);
+                $('#headertitle').text('Edit Project');
+                communicator.serviceObject.invoke({id: id});
+            }
+            
+            var pressed = false;
+            
+            $(document).hammer().on('tap', 'div#save-form', function(e) {
+                e.preventDefault();
+                
+                if(!pressed) {
+                    pressed = true;
+                    var formData = $('form.project-form').serializeObject();
+                    if(id == 0)
+                    formData.new = true;
+                    else formData.edit = true;
+                    communicator.serviceObject.invoke(formData);
+                } else {
+                    alert("Please wait for the server to respond.");
+                }
+            });
+            
+            var headerHandler = function(data) {
+                $('#header > .wrapper').append(data.message.header_options);
+            };
+            
+            var headerLoader = app.construct({
+                path : 'timesheet',
+                method : 'POST',
+                url : 'headerdata',
+                successHandler : headerHandler
+            });
+            
+            headerLoader.serviceObject.invoke({for: 'project/create_new'});
+            
+        });
+    </script>
+
+
+    </div>
+    
+    <div id="sidebar" style="z-index: -2;">
+        <div class="nav-wrapper">
+            <div class="user">
+                <table border="0">
+                    <tr>
+                        <td class="user-image">
+                            <img class="image" src="" alt="" width="100" id="headerimage">
+                        </td>
+                        <td class="user-details">
+                            <h5><span id="headername"></span></h5>
+                            <p class="small"><span class="headeremail"></span></p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <nav class="nav">
+                <ul>
+                    <li><a href=timesheets.html class="page-link small"><i class="fa fa-puzzle-piece"></i>Timesheets</a>
+                    </li><li><a href=projects-test.html class="page-link small"><i class="fa fa-coffee"></i>Projects</a>
+                    </li><li><a href=profile-test.html class="page-link small"><i class="fa fa-user"></i>Profile</a>
+                    </li><li><a href="#" id="logout" class="page-link small"><i class="fa fa-sign-out"></i>Logout</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    
+  </body>
+</html>

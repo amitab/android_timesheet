@@ -1,7 +1,7 @@
 $(document).ready(function() {
-    var path = 'timesheet';
+    /*var path = 'timesheet';
     var notificationList = smartList.createList({element : '#notification-list'});
-    var currentOffset = 0;
+    window.currentOffset = 0;
     
     var ua = navigator.userAgent,
     clickevent = (ua.match(/iPad/i) || ua.match(/iPhone/i) || ua.match(/Android/i)) ? "touchstart" : "click";
@@ -65,7 +65,7 @@ $(document).ready(function() {
             list += '</div>';
             list += '</li>';
             $('section#notification-list > ul').append(list);
-            currentOffset++;
+            window.currentOffset++;
         });
         notificationList.activate();
         notificationList.emptyListCheck();
@@ -82,10 +82,14 @@ $(document).ready(function() {
     communicator.serviceObject.invoke({default: true});
     notificationList.emptyListCheck();
     
+    function loadmore() {
+        communicator.serviceObject.invoke({offset: window.currentOffset});
+    }
+    
     $(document).hammer().on('tap', 'div#load-notitfications', function(e) {
         e.preventDefault();
-        communicator.serviceObject.invoke({offset: currentOffset});
-    });
+        communicator.serviceObject.invoke({offset: window.currentOffset});
+    });*/
     
     $(document).hammer().on('tap', 'li.notification-link', function(e) {
         e.preventDefault();

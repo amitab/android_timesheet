@@ -1,6 +1,79 @@
-
-    
 document.addEventListener('deviceready', function() {
+    // --------------------------------------- NOTIFICATIONS SPECIFIC STARTS ------------------------------------------------------
+    
+    var notificationList = smartList.createList({element : '#notification-list'});
+    var notificationSuccessHandler = function(data) {
+        
+        if(data.message.notifications.length == 0) {
+            native5.Notifications.show( data.message.lol, {
+                notificationType:'toast',
+                title:'Information',
+                position:'bottom',
+                distance:'0px',
+                timeout: 5000,
+                persistent:false
+            });
+            
+            return;
+        }
+        
+        $.each(data.message.notifications, function(key, value) {
+            
+            var notificationDate = ~~(new Date(value.notificationDate).getTime()/1000);
+            var today = ~~(new Date(Date.now()).getTime()/1000);
+            
+            var timeLeft = today - notificationDate;
+            var days = Math.round(timeLeft/(3600*24));
+            var hrs = Math.round(timeLeft / 3600);
+            var mins = Math.round((timeLeft % 3600) / 60);
+            var secs = Math.round(timeLeft % 60);
+            
+            var timeString = '';
+            
+            if(days > 0) {
+                timeString += days;
+                if(days == 1) timeString  += ' day ago';
+                else timeString  += ' days ago';
+            } else if (hrs > 0) {
+                timeString += hrs;
+                if(hrs == 1) timeString  += ' hour ago';
+                else timeString  += ' hours ago';
+            } else if (mins > 0) {
+                timeString += mins;
+                if(hrs == 1) timeString  += ' minute ago';
+                else timeString  += ' minutes ago';
+            } else if (secs > 0) {
+                timeString += secs;
+                if(hrs == 1) timeString  += ' second ago';
+                else timeString  += ' seconds ago';
+            } else {
+                timeString += 'Just Now';
+            }
+            
+            var list = '';
+            list += '<li class="notification-link" id="' + value.notificationId +'" url="' + value.url + value.notificationSubjectId + '">';
+            list += '<div class="content">';
+            list += '<div class="content-header">';
+            list += '<p class="small"><span class="from">' + value.notificationFromUser + '</span>, <span class="time">'; 
+            list += timeString + '</span></p>';
+            list += '</div>';
+            list += '<p>' + value.notificationBody + '</p>';
+            list += '</div>';
+            list += '</li>';
+            $('section#notification-list > ul').append(list);
+            window.currentOffset++;
+        });
+        notificationList.activate();
+        notificationList.emptyListCheck();
+    };
+    
+    var notificationsLoader = app.construct({
+        method : 'POST',
+        url : 'notifications/search',
+        successHandler : notificationSuccessHandler
+    });
+    
+    // --------------------------------------- NOTIFICATIONS SPECIFIC ENDS ------------------------------------------------------
     
     function urlData() {
         var query = location.search.substr(1);
@@ -14,34 +87,26 @@ document.addEventListener('deviceready', function() {
     }
     
     var params = urlData();
-    console.log(params);
     var dataId = params['id'];
     
+    // --------------------------------------- HEADER SPECIFIC STARTS -------------------------------------------------------------------
+    
     var animation = false;
-    // HEADER
-    
-    function menuIcon() {
-        if($('.trigger').children('h5').children('i').hasClass('fa-bars'))
-            $('.trigger').children('h5').children('i').removeClass('fa-bars').addClass('fa-times');
-        else
-            $('.trigger').children('h5').children('i').removeClass('fa-times').addClass('fa-bars');
-    }
-    
     
     function closeMenu(){
-        menuIcon();
         $('#page-wrap').removeClass('active');
         $('#sidebar').removeClass('active');
         setTimeout(function(){ $('#sidebar').css('z-index','-100'); animation = false; },350);
     }
     
     function openMenu(){
-        menuIcon();
         $('#sidebar').css('z-index','100');
         $('#page-wrap').addClass('active');
         $('#sidebar').addClass('active');
         setTimeout(function(){ animation = false; },350);
     }
+    
+    // --------------------------------------- HEADER SPECIFIC ENDS -------------------------------------------------------------------
     
     var notification = false;
     var search = false;
@@ -68,11 +133,15 @@ document.addEventListener('deviceready', function() {
         }
         if(data.message.header_menu.refresh == true) {
             refresh = true;
+            // load initial data
+            notificationsLoader.serviceObject.invoke({default: true});
+            notificationList.emptyListCheck();
+            
             menu.push({
                 icon: 'img/refresh.png',
                 text: 'Refresh',
                 click: function() {
-                    alert('Refresh');
+                    notificationsLoader.serviceObject.invoke({offset: window.currentOffset});
                 }
             });
             count++;
@@ -83,18 +152,7 @@ document.addEventListener('deviceready', function() {
                 icon: 'img/edit.png',
                 text: 'Edit',
                 click: function() {
-                    alert('Edit');
-                }
-            });
-            count++;
-        }
-        if(data.message.header_menu.inline_menu == true) {
-            inline_menu = true;
-            menu.push({
-                icon: 'img/inline.png',
-                text: 'Options',
-                click: function() {
-                    alert('Inline menu');
+                    window.location.href = 'createproject.html?id=' + dataId;
                 }
             });
             count++;
@@ -116,11 +174,15 @@ document.addEventListener('deviceready', function() {
                 icon: 'img/add.png',
                 text: 'Add Task',
                 click: function() {
-                    alert('Add');
+                    if($('input#page').val() == 'timesheets/details') {
+                        window.location.href = $('input#add-task-url').attr('task-details-path') + '?old_timesheet_id=' + $('input#timesheet_id').attr('value') + '&project_id=' + $('input#project_id').attr('value');
+                    }
                 }
             });
             count++;
-        } else if(data.message.header_menu.notification == true) {
+        } 
+        
+        if(data.message.header_menu.notification == true) {
             notification = true;
             menu.push({
                 icon: 'img/noti.png',
@@ -129,6 +191,20 @@ document.addEventListener('deviceready', function() {
                     window.location.href = "notifications.html";
                 }
             });
+            count++;
+        }
+        
+        if(data.message.header_menu.inline_menu == true) {
+            inline_menu = true;
+            $.each(data.message.header_menu.menu, function(key, value) {
+                menu.push({
+                    icon: '',
+                    text: key,
+                    click: function() {
+                        window.location.href = value;
+                    }
+                });
+            }); 
             count++;
         }
         
@@ -167,74 +243,28 @@ document.addEventListener('deviceready', function() {
     
     headerLoader.serviceObject.invoke({for: $('input#page').val(), id: dataId });
     
-    /*window.plugins.navBar.setLogo('images/timesheet-logo.png');
-    window.plugins.navBar.setIcon('images/timesheet-logo.png');
-    window.plugins.navBar.setTitle('');
-    window.plugins.navBar.setMenu([
-    {
-        icon: 'img/menu-icon.png',
-        text: 'Home',
-        click: function() {
-            if(!animation && Modernizr.csstransforms3d) {
-                animation = true;
-                if($('#page-wrap').hasClass('active')) {
-                    closeMenu();
-                }
-                else openMenu();
-            } 
-        }
-    }
-    ]);
-    window.plugins.navBar.setMenu(menu);
-    window.plugins.navBar.setDisplayHomeAsUpEnabled("true");
-    window.plugins.navBar.setDisplayShowHomeEnabled("true");
-    window.plugins.navBar.show();*/
-    
 });
 
 $(document).ready(function(){
     
     var animation = false;
-				
-    var ua = navigator.userAgent,
-    clickevent = (ua.match(/iPad/i) || ua.match(/iPhone/i) || ua.match(/Android/i)) ? "touchstart" : "click";
-    
-    function menuIcon() {
-        if($('.trigger').children('h5').children('i').hasClass('fa-bars'))
-            $('.trigger').children('h5').children('i').removeClass('fa-bars').addClass('fa-times');
-        else
-            $('.trigger').children('h5').children('i').removeClass('fa-times').addClass('fa-bars');
-    }
-    
     
     function closeMenu(){
-        menuIcon();
         $('#page-wrap').removeClass('active');
         $('#sidebar').removeClass('active');
         setTimeout(function(){ $('#sidebar').css('z-index','-100'); animation = false; },350);
     }
     
     function openMenu(){
-        menuIcon();
         $('#sidebar').css('z-index','100');
         $('#page-wrap').addClass('active');
         $('#sidebar').addClass('active');
         setTimeout(function(){ animation = false; },350);
     }
     
-    function openInlineMenu(inlineMenu) {
-        animation = true;
-        inlineMenu.removeClass('hidden').addClass('moving-in');
-        setTimeout(function(){ inlineMenu.removeClass('moving-in'); animation = false; },350);
-    }
+    // ------------------------------------------------------- AUTO CLOSE -------------------------------------------------------
     
-    function closeInlineMenu(inlineMenu) {
-        animation = true;
-        inlineMenu.addClass('moving-out');
-        setTimeout(function(){ inlineMenu.addClass('hidden').removeClass('moving-out'); animation = false; },350);
-    }
-    
-    $(document).on(clickevent, '#page-wrap', function(event) {
+    $(document).hammer().on('tap', '#page-wrap', function(event) {
         //event.preventDefault();
         
         var target = $(event.target);
@@ -254,100 +284,9 @@ $(document).ready(function(){
                 closeMenu();
             } 
         } 
-        /*if(!$('#search-box').hasClass('closed')) {
-            $('#search-box').addClass('closed');
-            $('#search-box').val('');
-            $('div.header-item:first').removeClass('fade-out');
-        }*/
     });
     
-    $(document).on(clickevent, '.trigger', function(event) {
-        event.preventDefault();
-        event.stopImmediatePropagation();
-        if(!animation && Modernizr.csstransforms3d) {
-            animation = true;
-            if($('#page-wrap').hasClass('active')) {
-                closeMenu();
-            }
-            else openMenu();
-        } 
-    });
-    
-    $(document).on(clickevent, '.inline-menu-trigger', function(e) {
-        e.preventDefault();
-        if(animation) return false;
-        var inlineMenu = $($(this).attr('menu'));
-        if(inlineMenu.hasClass('hidden')) {
-            openInlineMenu(inlineMenu);
-        } else {
-            closeInlineMenu(inlineMenu);
-        }
-    });
-    
-    $(document).on(clickevent, '.remove-section', function(e) {
-        e.preventDefault();
-        var section = $(this).closest('section');
-        section.addClass('moving-out');
-        setTimeout(function(){ section.remove(); },400);
-    });
-    
-    /*$('.warnings').bind('DOMNodeInserted', function(e) {
-        $('.warnings').removeClass('hide').addClass('waah');
-        setTimeout(function(){ 
-            $('.warnings').removeClass('waah'); 
-            setTimeout(function(){ $('.warnings').addClass('hide'); },400);
-        },4000);
-    }); */
-    
-    // left: 37, up: 38, right: 39, down: 40,
-    // spacebar: 32, pageup: 33, pagedown: 34, end: 35, home: 36
-    var keys = [37, 38, 39, 40];
-    var pos;
-    
-    function preventDefault(e) {
-        e = e || window.event;
-        if (e.preventDefault)
-          e.preventDefault();
-        e.returnValue = false;  
-    }
-    
-    function keydown(e) {
-        for (var i = keys.length; i--;) {
-            if (e.keyCode === keys[i]) {
-                preventDefault(e);
-                return;
-            }
-        }
-    }
-    
-    function wheel(e) {
-        preventDefault(e);
-    }
-    
-    function disable_scroll() {
-        if (window.addEventListener) {
-          window.addEventListener('DOMMouseScroll', wheel, false);
-        }
-        window.onmousewheel = document.onmousewheel = wheel;
-        document.onkeydown = keydown;
-        $('#page-wrap').bind('touchmove', function(e){e.preventDefault(); return false;});
-        
-        pos = $(document).scrollTop();
-        $('#page-wrap').css({'overflow' : 'hidden', 'height' : '100%'});
-        $('#page-wrap').scrollTop(pos);
-        
-    }
-    
-    function enable_scroll() {
-        if (window.removeEventListener) {
-            window.removeEventListener('DOMMouseScroll', wheel, false);
-        }
-        window.onmousewheel = document.onmousewheel = document.onkeydown = null;  
-        $('#page-wrap').unbind('touchmove');
-        $('#page-wrap').removeAttr( 'style' );
-        $(document).scrollTop(pos);
-    }
-    
+    // ------------------------------------------------------- BACK -------------------------------------------------------
     
     $('#back').click(function(e) {
         e.preventDefault();
@@ -355,15 +294,7 @@ $(document).ready(function(){
     })
 
     
-    $('#submit').click(function(){
-        $(this).closest('form').submit();
-    });
-    
-    $(document).on(clickevent, '#save-form', function(e) {
-        e.preventDefault();
-        var form = $($(this).attr('target'));
-        form.submit();
-    });
+    // ------------------------------------------------------- LOGOUT -------------------------------------------------------
     
     var logoutHandler = function(data) {
     	if(data.message.success == true) {

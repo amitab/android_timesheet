@@ -58,14 +58,9 @@
                         
                     </div>
                     
-                    
                     <div class="display-picture">
                         <img src="" alt="" id="profile-image" class="image">
                     </div>
-                    <div class="file" style="text-align: center; margin: 1rem 0;">
-                        <input type="file" size="1000" name="user_image" value="">   
-                    </div>
-                    
                     
                     <div class="append field">
                         <input class="input" type="text" placeholder="First Name" name="first_name" id="firstname" value=""/>
@@ -89,7 +84,6 @@
             </section>
         </div>
     </div>
-    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
     <script>
         $(document).ready(function() {			
             
@@ -106,76 +100,29 @@
             
             // LOAD COMPLETE
             
-            $.fn.serializeObject = function() {
-                var o = {};
-                var a = this.serializeArray();
-                $.each(a, function() {
-                    if (o[this.name] !== undefined) {
-                        if (!o[this.name].push) {
-                            o[this.name] = [o[this.name]];
-                        }
-                        o[this.name].push(this.value || '');
-                    } else {
-                        o[this.name] = this.value || '';
-                    }
-                });
-                return o;
-            };
-            
-            /*var headerHandler = function(data) {
-                $('#header > .wrapper').append(data.message.header_options);
-            };
-            
-            var headerLoader = app.construct({
-                path : 'timesheet',
-                method : 'POST',
-                url : 'headerdata',
-                successHandler : headerHandler
-            });
-            
-            headerLoader.serviceObject.invoke({for: 'profile/edit_profile'});*/
-            
-            function onPhotoDataSuccess(imageData) {
-                // Uncomment to view the base64-encoded image data
-                console.log(imageData);
-                
-                var smallImage = document.getElementById('profile-image');
-                smallImage.src = "data:image/jpeg;base64," + imageData;
-            }
-            
-            function onFail(message) {
-                alert('Failed because: ' + message);
-            }
-            
-            $(document).hammer().on('tap', '#profile-image', function(e) {
-                
-                navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 20,
-                    destinationType: Camera.DestinationType.DATA_URL,
-                    sourceType: Camera.PictureSourceType.PHOTOLIBRARY
-                });
-                
-            });
-                    
-            var onSuccess = function(position) {
-                $('#location').val(position.coords.latitude + ', ' + position.coords.longitude);
-            }
-            //
-            function onError(error) {
-                console.log('code: '    + error.code    + '\n' +
-                'message: ' + error.message + '\n');
-            }
-            
-            navigator.geolocation.getCurrentPosition(onSuccess, onError);
-            
             var successHandler = function(data) {
-                //console.log(data);
-                if(data.message.success == false) {
+                if(data.message.image_success == 0) {
+                    alert('Image upload failed!');
                     
-                    
+                } else if(data.message.image_success > 0) {
+                    alert('Image uploaded!');
+                    var user = JSON.parse(localStorage.getItem('user'));
+                    localStorage.removeItem('user');
+                    user.image = data.message.file_name;
+                    $('#headerimage').attr({'src' : user.image});
+                    localStorage.setItem('user', JSON.stringify(user));
+                        
+                } else if(data.message.success == false) {
+                    alert('failed!');
                     
                 } else if (data.message.success == true) {
-                
-                    
+                    alert('success!');
+                    var user = JSON.parse(localStorage.getItem('user'));
+                    localStorage.removeItem('user');
+                    user.first_name = data.message.user.first_name;
+                    user.last_name = data.message.user.last_name;
+                    $('#headername').text(user.first_name + ' ' + user.last_name);
+                    localStorage.setItem('user', JSON.stringify(user));
                 
                 } else {
                     
@@ -193,6 +140,45 @@
                 successHandler : successHandler
             });
             
+            $.fn.serializeObject = function() {
+                var o = {};
+                var a = this.serializeArray();
+                $.each(a, function() {
+                    if (o[this.name] !== undefined) {
+                        if (!o[this.name].push) {
+                            o[this.name] = [o[this.name]];
+                        }
+                        o[this.name].push(this.value || '');
+                    } else {
+                        o[this.name] = this.value || '';
+                    }
+                });
+                return o;
+            };
+            
+            function onPhotoDataSuccess(imageData) {
+                console.log(imageData);
+                
+                var smallImage = document.getElementById('profile-image');
+                smallImage.src = "data:image/jpeg;base64," + imageData;
+                
+                communicator.serviceObject.invoke({image: true, imageData: imageData});
+                
+            }
+            
+            function onFail(message) {
+                alert('Failed because: ' + message);
+            }
+            
+            $(document).hammer().on('tap', '#profile-image', function(e) {
+                
+                navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 20,
+                    destinationType: Camera.DestinationType.DATA_URL,
+                    sourceType: Camera.PictureSourceType.PHOTOLIBRARY
+                });
+                
+            });
+            
             // Fetch initial data
             communicator.serviceObject.invoke();
             
@@ -200,6 +186,7 @@
                 e.preventDefault();
                 var userData = $('form#edit-profile-form').serializeObject();
                 userData.edit = true;
+                communicator.serviceObject.invoke(userData);
             });
         });
     </script>

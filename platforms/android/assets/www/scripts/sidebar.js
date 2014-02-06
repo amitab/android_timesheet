@@ -108,6 +108,99 @@ document.addEventListener('deviceready', function() {
     
     // --------------------------------------- HEADER SPECIFIC ENDS -------------------------------------------------------------------
     
+    // ----------------------------------------------------------------------------------------------------------------------------------
+    
+        
+    var projectSuccessHandler = function(data) {
+    var showMessage;
+    if(projectId == 0) showMessage = "Project successfuly created.";
+    else showMessage = "Project successfuly edited.";
+        
+        if(data.message.success == true) {
+            native5.Notifications.show( showMessage, {
+                notificationType:'toast',
+                title:'Success',
+                position:'bottom',
+                distance:'0px',
+                timeout: 5000,
+                persistent:false
+            });
+            
+            window.location.href = "projectdetails.html?id=" + data.message.project_id;
+            
+        } else if(data.message.success == false) {
+            native5.Notifications.show( "Failed.", {
+                notificationType:'toast',
+                title:'Error',
+                position:'bottom',
+                distance:'0px',
+                timeout: 5000,
+                persistent:false
+            });
+            
+            pressed = false;
+            
+        } else {
+            $('#projectname').val(data.message.project.projectName);
+            $('#deadline').val(data.message.project.projectTimeAlloted);
+            $('#salary').val(data.message.project.projectSalary);
+            $('#description').text(data.message.project.projectDescription);
+        }
+        
+    };
+    
+    var projectHandler = app.construct({
+        path : 'timesheet',
+        method : 'POST',
+        url : 'project/create_new_data',
+        successHandler : projectSuccessHandler
+    });
+    
+    var pressed = false;
+    var projectId;
+    
+    // ----------------------------------------------------------------------------------------------------------------------------------
+    
+    // ----------------------------------------------------------------------------------------------------------------------------------
+    
+     var taskHandler = function(data) {
+       if(data.message.success == true) {
+            native5.Notifications.show( "Task successfuly created.", {
+                notificationType:'toast',
+                title:'Success',
+                position:'bottom',
+                distance:'0px',
+                timeout: 5000,
+                persistent:false
+            });
+            
+            window.location.href = "sheetdetails.html?id=" + data.message.timesheet_id;
+            return;
+        } else if (data.message.success == false) {
+            native5.Notifications.show( "Task creation failed.", {
+                notificationType:'toast',
+                title:'Error',
+                position:'bottom',
+                distance:'0px',
+                timeout: 5000,
+                persistent:false
+            });
+            pressed = false;
+            return;
+        } else {
+            $('#projectname').text(data.message.project_name);
+        }
+    };
+    
+    var taskCommunicator = app.construct({
+        path : 'timesheet',
+        method : 'POST',
+        url : 'timesheets/create_new_task_data',
+        successHandler : taskHandler
+    });
+    
+    // ----------------------------------------------------------------------------------------------------------------------------------
+    
     var notification = false;
     var search = false;
     var refresh = false;
@@ -118,6 +211,8 @@ document.addEventListener('deviceready', function() {
     var count = 0;
     
     var menu = [];
+    
+    
     
     var headerHandler = function(data) {
         if(data.message.header_menu.search == true) {
@@ -158,12 +253,133 @@ document.addEventListener('deviceready', function() {
             count++;
         }
         if(data.message.header_menu.form_save == true) {
-            form_save = true;
+            form_save = true
+            
+            if($('input#page').val() == 'timesheets/new_task') {
+                var result = urlData();
+                var timesheetId = result['old_timesheet_id']; // OLD TIMESHEET ID
+                if(typeof timesheetId === 'undefined') {
+                    timesheetId = null;
+                }
+                var projectId = result['project_id'];  // PROJECT ID
+                
+                var workTime = result['work_time'];  // WORK TIME
+                if(typeof workTime === 'undefined') {
+                    workTime = null;
+                } else {
+                    document.getElementById('startdate').readOnly = true;
+                    document.getElementById('starttime').readOnly = true;
+                    document.getElementById('enddate').readOnly = true;
+                    document.getElementById('endtime').readOnly = true;
+                }
+                
+                // ---------------------------- START TIME ----------------------------------------------------
+                
+                var startDate = decodeURIComponent(result['start_date']);
+                if(typeof startDate === 'undefined') {
+                    startDate = null;
+                } else {
+                    startDate = startDate.replace(/\+/g, ' ');
+                    $('#startdate').val(startDate);
+                }
+                var startTime = decodeURIComponent(result['start_time']);
+                if(typeof startTime === 'undefined') {
+                    startTime = null;
+                } else {
+                    startTime = startTime.replace(/\+/g, ' ');
+                    $('#starttime').val(startTime);
+                }
+                
+                // ---------------------------- START TIME ----------------------------------------------------
+                // ---------------------------- END TIME ----------------------------------------------------
+                
+                var endDate = decodeURIComponent(result['end_date']);
+                if(typeof endDate === 'undefined') {
+                    endDate = null;
+                } else {
+                    endDate = endDate.replace(/\+/g, ' ');
+                    $('#enddate').val(endDate);
+                }
+                var endTime = decodeURIComponent(result['end_time']);
+                if(typeof endTime === 'undefined') {
+                    endTime = null;
+                } else {
+                    endTime = endTime.replace(/\+/g, ' ');
+                    $('#endtime').val(endTime);
+                }
+                
+                // ---------------------------- END TIME ----------------------------------------------------
+                
+                taskCommunicator.serviceObject.invoke({project_id: projectId});
+                        
+                var onSuccess = function(position) {
+                    $('#location').val(position.coords.latitude + ', ' + position.coords.longitude);
+                }
+                //
+                function onError(error) {
+                    console.log('code: '    + error.code    + '\n' +
+                    'message: ' + error.message + '\n');
+                }
+                
+                navigator.geolocation.getCurrentPosition(onSuccess, onError);
+            }
+            else if($('input#page').val() == 'project/create_new') {
+                var result = urlData();
+                projectId = result['id'];
+                if(typeof projectId === 'undefined') {
+                    projectId = 0;
+                    // its a new project
+                } else {
+                    $('#project_id').val(projectId);
+                    projectHandler.serviceObject.invoke({id: projectId});
+                }
+            }
+            
             menu.push({
                 icon: 'img/save.png',
                 text: 'Save',
                 click: function() {
-                    alert('Save');
+                    if($('input#page').val() == 'project/create_new') {
+                        if(!pressed) {
+                            pressed = true;
+                            var formData = {};
+                            formData.project_name = $('#projectname').val();
+                            formData.salary = $('#salary').val();
+                            formData.description = $('#description').val();
+                            formData.deadline = $('#deadlinedate').val() + ' ' + $('#deadlinetime').val();
+                            if(projectId == 0)
+                            formData.new = true;
+                            else {
+                                formData.edit = true;
+                                formData.project_id = projectId;
+                            }
+                            projectHandler.serviceObject.invoke(formData);
+                        } else {
+                            alert("Please wait for the server to respond.");
+                        }
+                        
+                    } 
+                    else if ($('input#page').val() == 'timesheets/new_task') {
+                        
+                        if(!pressed) {
+                            pressed = true;
+                            var formData = {};
+                            formData.task_name = $('input#taskname').val();
+                            formData.start_time = $('input#startdate').val() + ' ' + $('input#starttime').val();
+                            formData.end_time = $('input#enddate').val() + ' ' + $('input#endtime').val();
+                            formData.notes = $('#notes').val();
+                            formData.location = $('input#location').val();
+                            
+                            formData.project_id = projectId;
+                            formData.timesheet_id = timesheetId;
+                            formData.work_time = workTime;
+                            formData.new = true;
+                            taskCommunicator.serviceObject.invoke(formData);
+                        } else {
+                            alert("Please wait for the server to respond.");
+                        }
+                        
+                    }
                 }
             });
             count++;
@@ -272,11 +488,6 @@ $(document).ready(function(){
         var target = $(event.target);
         if(target.is('a.page-link.small')) {
             window.location.href = target.attr('href');
-        }
-        if(!target.is('div.inline-menu a')) {
-            if(!$('div.inline-menu').hasClass('hidden')) {
-                closeInlineMenu($('div.inline-menu'));
-            }
         }
         
         if($('#page-wrap').hasClass('active')) {

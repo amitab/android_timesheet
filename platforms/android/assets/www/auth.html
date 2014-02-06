@@ -38,13 +38,13 @@
 <body>
     <script src="scripts/js/libs/jquery-1.10.1.min.js"></script>
 	<script src="scripts/modernizr.custom.js"></script>
+    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
     
     <!-- Loading custom js files -->    
     <script src="scripts/jquery.hammer.min.js" ></script>
     <script src="scripts/native5.core.js"></script>
     <script src="scripts/native5.notifications.js"></script>
     <script src="scripts/smart-list.js"></script>
-    <script src="scripts/sidebar.js" ></script>
     
     <div id="page-wrap">
     <div class="row">
@@ -80,6 +80,9 @@
         </div>
     </div>
     <script>
+        document.addEventListener('deviceready', function() {
+            window.plugins.navBar.hide();
+        });
         
         $(document).ready(function (e) {
             

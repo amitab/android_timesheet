@@ -168,7 +168,7 @@ document.addEventListener('deviceready', function() {
             });
             count++;
         }
-        if(data.message.header_menu.add_task == true) {
+        if((data.message.header_menu.add_task == true && data.message.header_menu.timer == true) || (data.message.header_menu.add_task == true && data.message.header_menu.isAdmin != true)) {
             add_task = true;
             menu.push({
                 icon: 'img/add.png',
@@ -176,6 +176,8 @@ document.addEventListener('deviceready', function() {
                 click: function() {
                     if($('input#page').val() == 'timesheets/details') {
                         window.location.href = $('input#add-task-url').attr('task-details-path') + '?old_timesheet_id=' + $('input#timesheet_id').attr('value') + '&project_id=' + $('input#project_id').attr('value');
+                    } else if ($('input#page').val() == 'timer') {
+                        window.location.href = 'newtask.html?project_id=' + dataId;
                     }
                 }
             });

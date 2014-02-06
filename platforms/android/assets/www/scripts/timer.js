@@ -175,10 +175,10 @@ $(document).ready(function(){
         }
     });
     
-    $(document).hammer().on('tap', '#add-task', function(e) {
+    /*$(document).hammer().on('tap', '#add-task', function(e) {
         e.preventDefault();
         var url = '/' + app.returnPath() + '/timesheets/new_task?rand_token=' + result['rand_token'] + '&project_id=' + projectId;
         window.location.href = url;
-    });
+    });*/
     
 });

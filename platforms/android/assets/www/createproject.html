@@ -64,8 +64,12 @@
                         <span class="adjoined"><i class="fa fa-file"></i></span>
                     </div>
                     <div class="field">
-                        <label class="medium" for="end_date"><i class="fa fa-clock-o"></i>&nbsp;Deadline : </label>
-                        <input name="deadline" type="datetime-local" id="deadline">
+                        <label class="medium" for="end_date"><i class="fa fa-clock-o"></i>&nbsp;Deadline Date : </label>
+                        <input name="deadline_date" type="date" id="deadlinedate">
+                    </div>
+                    <div class="field">
+                        <label class="medium" for="end_date"><i class="fa fa-clock-o"></i>&nbsp;Deadline Time : </label>
+                        <input name="deadline_time" type="time" id="deadlinetime">
                     </div>
                     <div class="append field">
                         <input class="input" type="text" placeholder="Salary" name="salary"  id="salary"/>
@@ -186,7 +190,12 @@
                 
                 if(!pressed) {
                     pressed = true;
-                    var formData = $('form.project-form').serializeObject();
+                    //var formData = $('form.project-form').serializeObject();
+                    var formData = {};
+                    formData.project_name = $('#projectname').val();
+                    formData.salary = $('#salary').val();
+                    formData.description = $('#description').val();
+                    formData.deadline = $('#deadlinedate').val() + ' ' + $('#deadlinetime').val();
                     if(id == 0)
                     formData.new = true;
                     else formData.edit = true;
@@ -195,19 +204,6 @@
                     alert("Please wait for the server to respond.");
                 }
             });
-            
-            /*var headerHandler = function(data) {
-                $('#header > .wrapper').append(data.message.header_options);
-            };
-            
-            var headerLoader = app.construct({
-                path : 'timesheet',
-                method : 'POST',
-                url : 'headerdata',
-                successHandler : headerHandler
-            });
-            
-            headerLoader.serviceObject.invoke({for: 'project/create_new'});*/
             
         });
     </script>

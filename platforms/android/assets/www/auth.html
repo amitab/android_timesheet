@@ -90,6 +90,13 @@
                 if(data.message.success == true) {
                     localStorage.setItem('rand_token', data.message.rand_token);
                     localStorage.setItem('user', JSON.stringify(data.message.user_data));
+        
+                    window.plugins.navBar.setLogo('images/timesheet-logo.png');
+                    window.plugins.navBar.setIcon('images/timesheet-logo.png');
+                    window.plugins.navBar.setTitle('TITLE');
+                    window.plugins.navBar.setDisplayHomeAsUpEnabled("true");
+                    window.plugins.navBar.setDisplayShowHomeEnabled("true");
+                    window.plugins.navBar.show();
                     
                     window.location.href = 'profile-test.html';
                 } else if(data.message.success == false) {

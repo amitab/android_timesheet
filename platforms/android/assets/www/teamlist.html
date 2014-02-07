@@ -74,21 +74,6 @@
             $('#headername').text(user.first_name + ' ' + user.last_name);
             $('#headerimage').attr({'src' : user.image});
             
-            // LOAD COMPLETE
-            
-            /*var headerHandler = function(data) {
-                $('#header > .wrapper').append(data.message.header_options);
-            };
-            
-            var headerLoader = app.construct({
-                path : 'timesheet',
-                method : 'POST',
-                url : 'headerdata',
-                successHandler : headerHandler
-            });
-            
-            headerLoader.serviceObject.invoke({for: 'project/team_list'});*/
-            
             var searchList = smartList.createList({element : '#search-results'});
             function getJsonFromUrl() {
                 var query = location.search.substr(1);
@@ -103,7 +88,6 @@
             
             var result = getJsonFromUrl();
             var successHandler = function(data) {
-                console.log(data);
                 
                 $.each(data.message.users, function(index, value) {
                     var listitem = '';

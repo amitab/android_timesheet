@@ -208,6 +208,7 @@ document.addEventListener('deviceready', function() {
     var inline_menu = false;
     var form_save = false;
     var add_task = false;
+    var team_list = false;
     var count = 0;
     
     var menu = [];
@@ -241,13 +242,13 @@ document.addEventListener('deviceready', function() {
             });
             count++;
         }
-        if(data.message.header_menu.edit == true) {
-            edit = true;
+        if(data.message.header_menu.team_list == true) {
+            team_list = true;
             menu.push({
-                icon: 'img/edit.png',
-                text: 'Edit',
+                icon: 'img/user.png',
+                text: 'Team List',
                 click: function() {
-                    window.location.href = 'createproject.html?id=' + dataId;
+                    window.location.href = 'teamlist.html?id=' + dataId;
                 }
             });
             count++;
@@ -442,13 +443,8 @@ document.addEventListener('deviceready', function() {
             });
         }
         
-        window.plugins.navBar.setLogo('images/timesheet-logo.png');
-        window.plugins.navBar.setIcon('images/timesheet-logo.png');
-        window.plugins.navBar.setTitle('TITLE');
+        window.plugins.navBar.clearMenu();
         window.plugins.navBar.setMenu(menu);
-        window.plugins.navBar.setDisplayHomeAsUpEnabled("true");
-        window.plugins.navBar.setDisplayShowHomeEnabled("true");
-        window.plugins.navBar.show();
         
     };
     

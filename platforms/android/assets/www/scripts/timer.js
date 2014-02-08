@@ -1,5 +1,5 @@
 $(document).ready(function(){
-            
+    
     var startTime = null;
     var endTime = null;
     var interval;

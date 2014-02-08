@@ -19,6 +19,7 @@
 
 package io.cordova.hellocordova;
 
+import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Window;
@@ -28,7 +29,8 @@ import org.apache.cordova.*;
 
 public class HelloCordova extends CordovaActivity 
 {
-    @Override
+    @SuppressLint("NewApi")
+	@Override
     public void onCreate(Bundle savedInstanceState)
     {
     	getWindow().requestFeature(Window.FEATURE_ACTION_BAR);

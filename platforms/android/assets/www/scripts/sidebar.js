@@ -1,4 +1,88 @@
 document.addEventListener('deviceready', function() {
+    function urlData() {
+        var query = location.search.substr(1);
+        var data = query.split("&");
+        var result = {};
+        for(var i=0; i<data.length; i++) {
+            var item = data[i].split("=");
+            result[item[0]] = item[1];
+        }
+        return result;
+    }
+    
+    var params = urlData();
+    var dataId = params['id'];
+    
+    
+    var isVisible = window.plugins.navBar.isShowing(function(error, showing)
+	{
+		if(error) return null;
+		
+		if(showing) return true;
+		else return false;
+	});
+    
+    if(!isVisible) {
+        window.plugins.navBar.show();
+    }
+    
+    switch($('input#page').val()) {
+            case 'profile':
+                window.plugins.navBar.setTitle('Profile'); 
+            break;
+            
+            case 'notifications':
+                window.plugins.navBar.setTitle('Notifications'); 
+            break;
+            
+            case 'project':
+                window.plugins.navBar.setTitle('Projects'); 
+            break;
+            
+            case 'project/timesheets':
+                window.plugins.navBar.setTitle('Timesheets'); 
+            break;
+            
+            case 'profile/edit_profile':
+                window.plugins.navBar.setTitle('Edit Profile'); 
+            break;
+            
+            case 'project/details':
+                window.plugins.navBar.setTitle('Project Details'); 
+            break;
+            
+            case 'project/create_new':
+            if(typeof dataId === 'undefined')
+                window.plugins.navBar.setTitle('New Project'); 
+            else
+                window.plugins.navBar.setTitle('Edit Project'); 
+            break;
+            
+            case 'project/add_users':
+                window.plugins.navBar.setTitle('Add Users'); 
+            break;
+            
+            case 'timesheets':
+                window.plugins.navBar.setTitle('Timesheets'); 
+            break;
+            
+            case 'timesheets/details':
+                window.plugins.navBar.setTitle('Timesheet Details'); 
+            break;
+            
+            case 'timesheets/new_task':
+                window.plugins.navBar.setTitle('New Task'); 
+            break;
+            
+            case 'timesheets/task_details':
+                window.plugins.navBar.setTitle('Task Details'); 
+            break;
+            
+            case 'timer':
+                window.plugins.navBar.setTitle('Timer'); 
+            break;
+    }
+    
     // --------------------------------------- NOTIFICATIONS SPECIFIC STARTS ------------------------------------------------------
     
     var notificationList = smartList.createList({element : '#notification-list'});
@@ -75,19 +159,6 @@ document.addEventListener('deviceready', function() {
     
     // --------------------------------------- NOTIFICATIONS SPECIFIC ENDS ------------------------------------------------------
     
-    function urlData() {
-        var query = location.search.substr(1);
-        var data = query.split("&");
-        var result = {};
-        for(var i=0; i<data.length; i++) {
-            var item = data[i].split("=");
-            result[item[0]] = item[1];
-        }
-        return result;
-    }
-    
-    var params = urlData();
-    var dataId = params['id'];
     
     // --------------------------------------- HEADER SPECIFIC STARTS -------------------------------------------------------------------
     
@@ -142,7 +213,9 @@ document.addEventListener('deviceready', function() {
             
         } else {
             $('#projectname').val(data.message.project.projectName);
-            $('#deadline').val(data.message.project.projectTimeAlloted);
+            var res = data.message.project.projectTimeAlloted.split(" ");
+            $('#deadlinedate').val(res[0]);
+            $('#deadlinetime').val(res[1]);
             $('#salary').val(data.message.project.projectSalary);
             $('#description').text(data.message.project.projectDescription);
         }
@@ -219,7 +292,7 @@ document.addEventListener('deviceready', function() {
         if(data.message.header_menu.search == true) {
             search = true;
             menu.push({
-                icon: 'img/search.png',
+                icon: 'img/ic_action_search.png',
                 text: 'Search',
                 click: function() {
                     alert('Search');
@@ -234,7 +307,7 @@ document.addEventListener('deviceready', function() {
             notificationList.emptyListCheck();
             
             menu.push({
-                icon: 'img/refresh.png',
+                icon: 'img/ic_action_refresh.png',
                 text: 'Refresh',
                 click: function() {
                     notificationsLoader.serviceObject.invoke({offset: window.currentOffset});
@@ -242,13 +315,13 @@ document.addEventListener('deviceready', function() {
             });
             count++;
         }
-        if(data.message.header_menu.team_list == true) {
-            team_list = true;
+        if(data.message.header_menu.edit == true) {
+            edit = true;
             menu.push({
-                icon: 'img/user.png',
-                text: 'Team List',
+                icon: 'img/ic_action_edit.png',
+                text: '',
                 click: function() {
-                    window.location.href = 'teamlist.html?id=' + dataId;
+                    window.location.href = 'createproject.html?id=' + dataId;
                 }
             });
             count++;
@@ -337,7 +410,7 @@ document.addEventListener('deviceready', function() {
             }
             
             menu.push({
-                icon: 'img/save.png',
+                icon: 'img/ic_action_accept.png',
                 text: 'Save',
                 click: function() {
                     if($('input#page').val() == 'project/create_new') {
@@ -388,7 +461,7 @@ document.addEventListener('deviceready', function() {
         if((data.message.header_menu.add_task == true && data.message.header_menu.timer == true) || (data.message.header_menu.add_task == true && data.message.header_menu.isAdmin != true)) {
             add_task = true;
             menu.push({
-                icon: 'img/add.png',
+                icon: 'img/ic_action_new.png',
                 text: 'Add Task',
                 click: function() {
                     if($('input#page').val() == 'timesheets/details') {
@@ -401,29 +474,29 @@ document.addEventListener('deviceready', function() {
             count++;
         } 
         
-        if(data.message.header_menu.notification == true) {
-            notification = true;
-            menu.push({
-                icon: 'img/noti.png',
-                text: 'Notifications',
-                click: function() {
-                    window.location.href = "notifications.html";
-                }
-            });
-            count++;
-        }
-        
         if(data.message.header_menu.inline_menu == true) {
             inline_menu = true;
             $.each(data.message.header_menu.menu, function(key, value) {
                 menu.push({
-                    icon: '',
+                    icon: 'img/ic_action_group.png',
                     text: key,
                     click: function() {
                         window.location.href = value;
                     }
                 });
+                count++;
             }); 
+        }
+        
+        if(data.message.header_menu.notification == true) {
+            notification = true;
+            menu.push({
+                icon: 'img/ic_action_new_event.png',
+                text: 'Noti',
+                click: function() {
+                    window.location.href = "notifications.html";
+                }
+            });
             count++;
         }
         

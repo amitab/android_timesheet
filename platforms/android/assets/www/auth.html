@@ -93,10 +93,10 @@
         
                     window.plugins.navBar.setLogo('images/timesheet-logo.png');
                     window.plugins.navBar.setIcon('images/timesheet-logo.png');
-                    window.plugins.navBar.setTitle('TITLE');
+                    window.plugins.navBar.setSubtitle(data.message.user_data.email);
                     window.plugins.navBar.setDisplayHomeAsUpEnabled("true");
                     window.plugins.navBar.setDisplayShowHomeEnabled("true");
-                    window.plugins.navBar.show();
+                    //window.plugins.navBar.show();
                     
                     window.location.href = 'profile-test.html';
                 } else if(data.message.success == false) {

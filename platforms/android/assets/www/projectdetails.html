@@ -117,6 +117,8 @@
                         </div>
                     </div>
                 </div>
+                <div class="option-container">
+                </div>
             </section>
         </div>
     </div>
@@ -129,7 +131,6 @@
     
     <script>
         $(document).ready(function (e) {
-            
             // LOAD USER DETAILS
             
             var user = JSON.parse(localStorage.getItem('user'));
@@ -156,23 +157,11 @@
             var params = getJsonFromUrl();
             var projectId = params['id'];
             
-            /*var headerHandler = function(data) {
-                $('#header > .wrapper').append(data.message.header_options);
-            };
-            
-            var headerLoader = app.construct({
-                path : 'timesheet',
-                method : 'POST',
-                url : 'headerdata',
-                successHandler : headerHandler
-            });
-            
-            headerLoader.serviceObject.invoke({for: 'project/details', project_id: projectId});*/
-            
             var successHandler = function(data) {
                 $('#edit-inline-menu > ul').append(data.message.inlinemenu);
                 
                 $('#projectname').text(data.message.project_details.projectName);
+                
                 $('#totaltime').text(data.message.total_time);
                 $('#totalsalary').text(data.message.total_salary);
                 $('#pausetime').text(data.message.pause_time);
@@ -185,14 +174,12 @@
                 $('#description').text(data.message.project_details.projectDescription);
                 $('a#employer').attr({'href' : 'viewprofile.html?id=' + data.message.manager_id});
                 
-                if(data.message.is_admin == true) {
+                if(data.message.is_admin == true && data.message.project_details.projectState != 1) {
                     var marker = '';
-                    marker += '<div class="button-container" style="margin-top: 1rem;">';
                     marker += '<div class="medium primary btn" style="margin-bottom: 10px;">';
-                    marker += '<a href="#" id="mark-button">Mark project complete</a>';
+                    marker += '<a href="#" id="mark-button" onclick="return false;">Mark project complete</a>';
                     marker += '</div>';
-                    marker += '</div>';
-                    $('section.project-details').append(marker);
+                    $('.option-container').prepend(marker);
                 }
                 
             };
@@ -206,9 +193,9 @@
             
             communicator.serviceObject.invoke({id: projectId});
             
-            $(document).hammer().on('tap', '#marker', function(e) {
+            $(document).hammer().on('tap', '#mark-button', function(e) {
                 e.preventDefault();
-                var url = $(this).attr('url');
+                var url = 'project/mark_complete';
                 
                 var completer = app.construct({
 	            	path: '',
@@ -224,6 +211,9 @@
 				                timeout: 5000,
 				                persistent:false
 				            });
+                            $('#state').text('Complete');
+                            $('.option-container').remove();
+                            
 	            		} else if (data.message.success == false) {
 	            			native5.Notifications.show( "An error occured.", {
 				                notificationType:'toast',

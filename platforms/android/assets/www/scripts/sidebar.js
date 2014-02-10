@@ -25,6 +25,9 @@ document.addEventListener('deviceready', function() {
     if(!isVisible) {
         window.plugins.navBar.show();
     }
+    window.plugins.navBar.setHomeCallback(function() {
+        history.back();
+    });
     
     switch($('input#page').val()) {
             case 'profile':
@@ -477,8 +480,22 @@ document.addEventListener('deviceready', function() {
         if(data.message.header_menu.inline_menu == true) {
             inline_menu = true;
             $.each(data.message.header_menu.menu, function(key, value) {
+                
+                var image = 'img/';
+                if(key == 'View Team') {
+                    image += 'ic_action_group.png';
+                } else if (key == 'View All Timesheets') {
+                    image += 'ic_action_time.png';
+                } else if (key == 'Back To Projects') {
+                    image += 'ic_action_back.png';
+                } else if (key == 'Start Working') {
+                    image += 'ic_action_play.png';
+                } else if (key == 'Add Users') {
+                    image += 'ic_action_add_person.png';
+                }
+                
                 menu.push({
-                    icon: 'img/ic_action_group.png',
+                    icon: image,
                     text: key,
                     click: function() {
                         window.location.href = value;
@@ -573,20 +590,35 @@ $(document).ready(function(){
     $('#back').click(function(e) {
         e.preventDefault();
         history.back();
-    })
+    });
+    
+    
 
+    function onBackKeyDown() {
+        history.back();
+    }
+
+    document.addEventListener("backbutton", onBackKeyDown, false);
     
     // ------------------------------------------------------- LOGOUT -------------------------------------------------------
     
     var logoutHandler = function(data) {
     	if(data.message.success == true) {
-    		alert("Logout Successful");
     		localStorage.removeItem('rand_token');
     		localStorage.removeItem('user');
             
     		window.location.href = "auth.html";
     	} else {
-    		alert("Logout Unsucessful");
+                    
+            native5.Notifications.show( "An error occured.", {
+                notificationType:'toast',
+                title:'Error',
+                position:'bottom',
+                distance:'0px',
+                timeout: 5000,
+                persistent:false
+            });
+            
     	}
     };
     

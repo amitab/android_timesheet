@@ -14,7 +14,7 @@ var app = (function (app, native5) {
         }, function(){
             $('#page-wrap').removeClass('fade');
             $('#loading-anim').remove();
-            alert("FAILURE");
+
             console.log(this);
         });
         return service;

@@ -20,10 +20,12 @@
 package io.cordova.hellocordova;
 
 import android.annotation.SuppressLint;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Window;
 import android.webkit.WebView;
+import android.widget.TextView;
 
 import org.apache.cordova.*;
 

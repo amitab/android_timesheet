@@ -88,11 +88,11 @@
                 <div class="stats">
                     <table>
                         <tr>
-                            <td>
+                            <td id="project-link">
                                 <p class="time"><span id="projects"></span></p>
                                 <p class="type">Projects</p>
                             </td>
-                            <td>
+                            <td id="timesheets-link">
                                 <p class="time"><span id="timesheets"></span></p>
                                 <p class="type">Timesheets</p>
                             </td>
@@ -128,6 +128,16 @@
             
             // LOAD COMPLETE
             
+            $(document).hammer().on('tap', 'td#project-link', function(e) {
+                e.preventDefault();
+                window.location.href = 'projects-test.html';
+            });
+            
+            $(document).hammer().on('tap', 'td#timesheets-link', function(e) {
+                e.preventDefault();
+                window.location.href = 'timesheets.html';
+            });
+            
             function getJsonFromUrl() {
                 var query = location.search.substr(1);
                 var data = query.split("&");
@@ -161,19 +171,6 @@
                 url : 'profile/default_data',
                 successHandler : successHandler
             });
-            
-            /*var headerHandler = function(data) {
-                $('#header > .wrapper').append(data.message.header_options);
-            };
-            
-            var headerLoader = app.construct({
-                path : 'timesheet',
-                method : 'POST',
-                url : 'headerdata',
-                successHandler : headerHandler
-            });
-            
-            headerLoader.serviceObject.invoke({for: 'profile'});*/
             
             
             var result = getJsonFromUrl();

@@ -44,6 +44,7 @@
     <script src="scripts/jquery.hammer.min.js" ></script>
     <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
     <script src="scripts/native5.core.js"></script>
+    <script src="scripts/native5.notifications.js"></script>
     <script src="scripts/smart-list.js"></script>
     <script src="scripts/sidebar.js" ></script>
 
@@ -102,10 +103,27 @@
             
             var successHandler = function(data) {
                 if(data.message.image_success == 0) {
-                    alert('Image upload failed!');
+                    
+                    native5.Notifications.show( "Image could not be uploaded.", {
+                        notificationType:'toast',
+                        title:'Error',
+                        position:'bottom',
+                        distance:'0px',
+                        timeout: 5000,
+                        persistent:false
+                    });
                     
                 } else if(data.message.image_success > 0) {
-                    alert('Image uploaded!');
+                    
+                    native5.Notifications.show( "Image uploaded.", {
+                        notificationType:'toast',
+                        title:'Info',
+                        position:'bottom',
+                        distance:'0px',
+                        timeout: 5000,
+                        persistent:false
+                    });
+                    
                     var user = JSON.parse(localStorage.getItem('user'));
                     localStorage.removeItem('user');
                     user.image = data.message.file_name;
@@ -113,10 +131,27 @@
                     localStorage.setItem('user', JSON.stringify(user));
                         
                 } else if(data.message.success == false) {
-                    alert('failed!');
+                    
+                    native5.Notifications.show( "Update Failed.", {
+                        notificationType:'toast',
+                        title:'Error',
+                        position:'bottom',
+                        distance:'0px',
+                        timeout: 5000,
+                        persistent:false
+                    });
                     
                 } else if (data.message.success == true) {
-                    alert('success!');
+                    
+                    native5.Notifications.show( "Profile Updated.", {
+                        notificationType:'toast',
+                        title:'Info',
+                        position:'bottom',
+                        distance:'0px',
+                        timeout: 5000,
+                        persistent:false
+                    });
+                    
                     var user = JSON.parse(localStorage.getItem('user'));
                     localStorage.removeItem('user');
                     user.first_name = data.message.user.first_name;
@@ -172,9 +207,14 @@
             
             $(document).hammer().on('tap', '#profile-image', function(e) {
                 
-                navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 20,
+                navigator.camera.getPicture(onPhotoDataSuccess, onFail, { 
+                    quality: 20,
                     destinationType: Camera.DestinationType.DATA_URL,
-                    sourceType: Camera.PictureSourceType.PHOTOLIBRARY
+                    sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
+                    allowEdit: true,
+                    targetWidth: 250,
+                    targetHeight: 250,
+                    
                 });
                 
             });

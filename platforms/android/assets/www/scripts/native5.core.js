@@ -65,7 +65,9 @@ var native5 = {};
             
             // Show loading image
             
+            if(!$('#page-wrap').hasClass('fade'))
             $('#page-wrap').addClass('fade');
+            if($('#loading-anim').length == 0)
             $('body').prepend('<div id="loading-anim"><i class="fa fa-refresh fa-spin"></i>&nbsp;&nbsp;</div>');
             
             // Show loading image

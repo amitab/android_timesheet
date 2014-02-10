@@ -2007,3 +2007,7 @@ div#loading-anim {
 section {
     margin: 8% 0;
 }
+
+input {
+    font-family: "Roboto-Light"!important;
+}

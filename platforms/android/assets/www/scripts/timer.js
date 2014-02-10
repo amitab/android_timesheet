@@ -21,19 +21,6 @@ $(document).ready(function(){
     
     // LOAD COMPLETE
     
-    /*var headerHandler = function(data) {
-        $('#header > .wrapper').append(data.message.header_options);
-    };
-    
-    var headerLoader = app.construct({
-        path : 'timesheet',
-        method : 'POST',
-        url : 'headerdata',
-        successHandler : headerHandler
-    });
-    
-    headerLoader.serviceObject.invoke({for: 'timer'});*/
-    
     var ua = navigator.userAgent,
     clickevent = (ua.match(/iPad/i) || ua.match(/iPhone/i) || ua.match(/Android/i)) ? "touchstart" : "click";
     
@@ -58,14 +45,9 @@ $(document).ready(function(){
         $('#hour').text(res)
     }
     
-    function logger(x) {
-        console.log(x);
-    }
-    
     function startClock() {
         if(startTime == null) {
             startTime = new Date(Date.now());
-            logger(startTime);
         }
         interval = setInterval(function(){
             workTime = (workTime+1) % 60;
@@ -77,7 +59,6 @@ $(document).ready(function(){
     function setStopDate() {
         if(endTime == null) {
             endTime = new Date(Date.now());
-            logger(endTime);
         }
     }
     
@@ -88,10 +69,6 @@ $(document).ready(function(){
         var time = minute * 60 + hour * 3600 + workTime;
         
         var pauseTime = Math.round(elapsed - time);
-        
-        logger('Elapsed : ' + elapsed);
-        logger('Work Time : ' + time);
-        logger('Pause Time : ' + pauseTime);
     }
     
     function stopClock() {

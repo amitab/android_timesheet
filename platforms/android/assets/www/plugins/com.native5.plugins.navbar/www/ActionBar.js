@@ -102,6 +102,17 @@ ActionBar.prototype.clearTabs = function(callback)
 	return this.setTabs([], callback);
 };
 
+ActionBar.prototype.onSearch = function(myCallback)
+{
+	myCallback = myCallback || function(txt) {alert(txt);};
+
+	return cordova.exec(
+			function() {console.log('Search Activated');},
+			function() {console.log('Error enabling search');},
+		'ActionBar', 'onSearch', [myCallback]);
+};
+
+
 ActionBar.prototype.setDisplayHomeAsUpEnabled = function(showHomeAsUp, callback)
 {
 	callback = callback || function() {};

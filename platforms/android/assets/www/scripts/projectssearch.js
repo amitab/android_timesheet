@@ -1,14 +1,8 @@
-$(document).ready(function() {
-    
-    var selectedOption = 0;
-    var ua = navigator.userAgent,
-    clickevent = (ua.match(/iPad/i) || ua.match(/iPhone/i) || ua.match(/Android/i)) ? "touchstart" : "click";
-    
-    var searchList = smartList.createList({element : '#projects-list'});
-    
-    // success handler must be declared before app is constructed
-    
-    var successHandler = function(data) {
+var selectedOption = 0;
+
+var searchList = smartList.createList({element : '#projects-list'});
+
+var successHandler = function(data) {
         $('#projects-list > ul').html('');
         $.each(data.message.projects, function(key, value) {
             var list = '';
@@ -65,29 +59,41 @@ $(document).ready(function() {
         searchList.emptyListCheck();
     };
     
-    var communicator = app.construct({
-        path : 'timesheet',
-        method : 'POST',
-        url : 'project/search',
-        successHandler : successHandler
+var communicator = app.construct({
+    path : 'timesheet',
+    method : 'POST',
+    url : 'project/search',
+    successHandler : successHandler
+});
+
+var prevQuery = '';
+
+function callSearch(query) {
+        query = '%' + query + '%';
+
+        if(prevQuery != query) {
+            prevQuery = query;
+        } else {
+            return;
+        }
+
+        // Search using ajax
+        var args = {};
+        args.q = query;
+        args.option = $('select#filter').val();
+        communicator.serviceObject.invoke(args);
+
+
+}
+
+
+$(document).ready(function() {
+    
+    document.addEventListener('deviceready', function() {
+        window.plugins.navBar.onSearch("callSearch");
     });
     
-    console.log(communicator);
-    
-    function openSearchBox(searchBox) {
-        searchBox.removeClass('closed');
-        $('div.header-item:first').addClass('fade-out');
-    }
-    
-    function closeSearchBox(searchBox) {
-        searchBox.addClass('closed');
-        $('#search-box').val('');
-        $('div.header-item:first').removeClass('fade-out');
-    }
-    
-    var prevQuery = '';
-    
-    $(document).on(clickevent, '#search-button', function(e){
+    $(document).hammer().on('tap', '#search-button', function(e){
         e.preventDefault();
         var searchBox = $($(this).attr('href'));
         
@@ -142,7 +148,7 @@ $(document).ready(function() {
         communicator.serviceObject.invoke(args);
     });
     
-    $(document).on(clickevent, 'td#new-project', function(e) {
+    $(document).hammer().on('tap', 'td#new-project', function(e) {
         e.preventDefault();
         window.location.href = $(this).attr('href');
     });

@@ -24,7 +24,7 @@ var app = (function (app, native5) {
     
     app.construct = function(args) {
         var path;
-        if(dev) path = 'http://192.168.1.164/timesheet';
+        if(dev) path = 'http://192.168.1.164/timesheet_final';
         else path = 'http://apps.sandbox.native5.com/zbdGs8Z2U1389602848';
         this.config = {
             path : path,
@@ -40,7 +40,7 @@ var app = (function (app, native5) {
     
     app.returnPath = function(args) {
         if(dev)
-        return 'http://192.168.1.164/timesheet';  
+        return 'http://192.168.1.164/timesheet_final';  
         else 
         return 'http://apps.sandbox.native5.com/zbdGs8Z2U1389602848';
     };
@@ -93,8 +93,8 @@ var smartList = (function(smartList) {
             });
             
             $(this).find('img').each(function(index) {
-                $(this).addClass('image round').attr({'width' : '50'});
-                $(this).wrap('<div class="display-picture"></div>');
+                $(this).addClass('image');
+                $(this).wrap('<div class="display-picture-thumb"></div>');
             });
         });
     }

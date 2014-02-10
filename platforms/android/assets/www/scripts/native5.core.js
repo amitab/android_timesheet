@@ -105,6 +105,10 @@ var native5 = {};
             if (app) app.currentService = this.name;
             var request = $.ajax({
                 url: url_to_invoke,
+                  beforeSend: function (request)
+                {
+                   request.setRequestHeader("X-Requested-Native5-App", 'phonegap');
+                },
                 type: this.method,
                 data: data,
                 dataType: "json"

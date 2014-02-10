@@ -1987,7 +1987,7 @@ div#loading-anim {
 }
 
 #page-wrap.fade {
-    opacity: 0.4;
+    opacity: 0.2;
 }
 
 #search-button {
@@ -2019,7 +2019,7 @@ section .display-picture {
     -o-border-radius: 50%;
     border-radius: 50%; 
 }
-section .display-picture .image { width: 100%; margin-bottom: 0px; }
+section .display-picture .image, td .display-picture .image, .display-picture-thumb .image { height: 100%; margin-bottom: 0px; }
 section.worker {
     text-align: center;
 }
@@ -2042,4 +2042,17 @@ td .display-picture {
     -o-border-radius: 50%;
     border-radius: 50%; 
 }
+
+td .display-picture-thumb { 
+    width: 50px;
+    margin: 0 auto;
+    height: 50px;
+    overflow: hidden;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    -ms-border-radius: 50%;
+    -o-border-radius: 50%;
+    border-radius: 50%; 
+}
+
 td .display-picture .image { width: 100%; margin-bottom: 0px; }

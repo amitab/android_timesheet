@@ -1,4 +1,7 @@
 document.addEventListener('deviceready', function() {
+    
+    window.plugins.navBar.onSearch(null);
+    
     function urlData() {
         var query = location.search.substr(1);
         var data = query.split("&");
@@ -277,6 +280,10 @@ document.addEventListener('deviceready', function() {
     
     // ----------------------------------------------------------------------------------------------------------------------------------
     
+    
+    
+    // ----------------------------------------------------------------------------------------------------------------------------------
+    
     var notification = false;
     var search = false;
     var refresh = false;
@@ -292,7 +299,7 @@ document.addEventListener('deviceready', function() {
     
     
     var headerHandler = function(data) {
-        if(data.message.header_menu.search == true) {
+        /*if(data.message.header_menu.search == true) {
             search = true;
             menu.push({
                 icon: 'img/ic_action_search.png',
@@ -302,7 +309,7 @@ document.addEventListener('deviceready', function() {
                 }
             });
             count++;
-        }
+        }*/
         if(data.message.header_menu.refresh == true) {
             refresh = true;
             // load initial data

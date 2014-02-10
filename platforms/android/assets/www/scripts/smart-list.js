@@ -15,7 +15,6 @@ var app = (function (app, native5) {
             $('#page-wrap').removeClass('fade');
             $('#loading-anim').remove();
 
-            console.log(this);
         });
         return service;
     };
@@ -24,7 +23,7 @@ var app = (function (app, native5) {
     
     app.construct = function(args) {
         var path;
-        if(dev) path = 'http://192.168.1.164/timesheet_final';
+        if(dev) path = 'http://192.168.1.15/timesheet_final';
         else path = 'http://apps.sandbox.native5.com/zbdGs8Z2U1389602848';
         this.config = {
             path : path,
@@ -40,7 +39,7 @@ var app = (function (app, native5) {
     
     app.returnPath = function(args) {
         if(dev)
-        return 'http://192.168.1.164/timesheet_final';  
+        return 'http://192.168.1.15/timesheet_final';  
         else 
         return 'http://apps.sandbox.native5.com/zbdGs8Z2U1389602848';
     };

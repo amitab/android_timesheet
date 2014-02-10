@@ -77,7 +77,7 @@
                         <span class="adjoined"><i class="fa fa-envelope"></i></span>
                     </div>
                     <div class="field append">
-                        <input class="input first-child" type="text" placeholder="Phone Number" name="phone_number" />
+                        <input class="input first-child" type="text" placeholder="+[area code][phone number]" name="phone_number" />
                         <span class="adjoined"><i class="fa fa-phone"></i></span>
                     </div>
                     <div class="field append">
@@ -124,10 +124,33 @@
             
             var successHandler = function(data) {
                 if(data.message.success == true) {
-                    alert('success');
-                    window.location.href = "auth.html";
+                    
+                    native5.Notifications.show( "Success!", {
+                        notificationType:'toast',
+                        title:'Info',
+                        position:'bottom',
+                        distance:'0px',
+                        timeout: 2000,
+                        persistent:false
+                    });
+                    
+                   setTimeout(function(){ window.location.href = "auth.html";}, 2000);
+                   
                 } else {
-                    alert('failure');
+                    
+                    native5.Notifications.show( "Error creating user.", {
+                        notificationType:'toast',
+                        title:'Error',
+                        position:'bottom',
+                        distance:'0px',
+                        timeout: 5000,
+                        persistent:false
+                    });
+                    $('.warnings').html('');
+                    $.each(data.message.message.fail, function(key, value) {
+                        $('.warnings').append('<p class="alert warning">' + value + '</p>');
+                    });
+                    
                 }
             };
             

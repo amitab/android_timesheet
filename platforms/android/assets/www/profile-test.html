@@ -110,6 +110,17 @@
                         </div>
                     </div>
                             </section>
+                            
+                            
+            <section class="worker">
+                <select name="" id="project-list">
+                    <option value="" disabled>Select project</option>
+                </select>
+                <div class="medium secondary btn">
+                    <a href="#" id="start-working" style="font-size: 14px;" >
+                    <i class="fa fa-clock-o"></i>&nbsp;Start Working</a>
+                </div>
+            </section>
         </div>
     </div>
     
@@ -149,10 +160,28 @@
                 return result;
             }
             
+            
+            var projectListHandler = function(data) {
+                $.each(data.message.projects, function(key, value) {
+                    $('select#project-list').append('<option value="' + value.projectId + '" >' + value.projectName + '</option>');
+                });
+            };
+            
+            var projectsLoader = app.construct({
+                method: 'POST',
+                url: 'project/search',
+                successHandler: projectListHandler
+            });
+            
+            projectsLoader.serviceObject.invoke({option: 6});
+            
+            $(document).hammer().on('tap', 'a#start-working', function(e) {
+                e.preventDefault();
+                if($('select#project-list').val() > 0)
+                window.location.href = 'timer.html?id=' + $('select#project-list').val();
+            });
+            
             var successHandler = function(data) {
-                console.log(data);
-                
-                //$('#header > .wrapper').append(data.message.header_options);
                 
                 $('#hours').text(data.message.stats.hours);
                 $('#timesheets').text(data.message.stats.timesheets);
@@ -201,7 +230,9 @@
                 <table border="0">
                     <tr>
                         <td class="user-image">
-                            <img class="image" src="" alt="" width="100" id="headerimage">
+                            <div class="display-picture">
+                                <img src="" id="headerimage" alt="" class="image">
+                            </div>
                         </td>
                         <td class="user-details">
                             <h5><span id="headername"></span></h5>

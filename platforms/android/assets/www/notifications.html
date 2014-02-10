@@ -80,19 +80,6 @@
             
             // LOAD COMPLETE
             
-            /*var headerHandler = function(data) {
-                $('#header > .wrapper').append(data.message.header_options);
-            };
-            
-            var headerLoader = app.construct({
-                path : 'timesheet',
-                method : 'POST',
-                url : 'headerdata',
-                successHandler : headerHandler
-            });
-            
-            headerLoader.serviceObject.invoke({for: 'notifications'});*/
-            
         });
     </script>
     
@@ -105,7 +92,9 @@
                 <table border="0">
                     <tr>
                         <td class="user-image">
-                            <img class="image" src="" alt="" width="100" id="headerimage">
+                            <div class="display-picture">
+                                <img src="" id="headerimage" alt="" class="image">
+                            </div>
                         </td>
                         <td class="user-details">
                             <h5><span id="headername"></span></h5>

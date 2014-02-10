@@ -453,7 +453,7 @@ document.addEventListener('deviceready', function() {
                             formData.new = true;
                             taskCommunicator.serviceObject.invoke(formData);
                         } else {
-                            alert("Please wait for the server to respond.");
+                            
                         }
                         
                     }

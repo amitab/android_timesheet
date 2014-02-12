@@ -468,7 +468,7 @@ document.addEventListener('deviceready', function() {
             });
             count++;
         }
-        if((data.message.header_menu.add_task == true && data.message.header_menu.timer == true) || (data.message.header_menu.add_task == true && data.message.header_menu.isAdmin != true)) {
+        if(data.message.header_menu.add_task == true) {
             add_task = true;
             menu.push({
                 icon: 'img/ic_action_new.png',

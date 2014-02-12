@@ -2,7 +2,7 @@
 
 var app = (function (app, native5) {
     app.registry = new native5.core.ServiceRegistry(); 
-    var dev = false;
+    var dev = true;
     
     var createService = function(url, config, successHandler) {
         var service =  new native5.core.Service(url, config);
